@@ -1,0 +1,501 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>9/18 原宿旅行行程</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #20242a;
+      --muted: #5f6976;
+      --line: #d9dde3;
+      --paper: #fffdf8;
+      --panel: #ffffff;
+      --accent: #cc3f55;
+      --accent-strong: #9e263d;
+      --teal: #167c80;
+      --gold: #b77716;
+      --shadow: 0 14px 40px rgba(31, 36, 43, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Yu Gothic UI", "Microsoft JhengHei", "Noto Sans TC", Arial, sans-serif;
+      color: var(--ink);
+      background:
+        linear-gradient(90deg, rgba(204, 63, 85, 0.07), transparent 40%),
+        linear-gradient(180deg, #f8fbfd 0%, var(--paper) 42%, #f2f5f4 100%);
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .hero {
+      min-height: 48vh;
+      display: grid;
+      align-items: end;
+      padding: 42px 20px 30px;
+      background:
+        linear-gradient(180deg, rgba(18, 23, 28, 0.18), rgba(18, 23, 28, 0.66)),
+        url("https://images.unsplash.com/photo-1542051841857-5f90071e7989?auto=format&fit=crop&w=1800&q=80") center 44% / cover;
+      color: white;
+    }
+
+    .hero-inner,
+    main {
+      width: min(1120px, 100%);
+      margin: 0 auto;
+    }
+
+    .eyebrow {
+      margin: 0 0 10px;
+      font-size: 0.9rem;
+      letter-spacing: 0;
+      font-weight: 700;
+      color: #ffe0a6;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(2.2rem, 6vw, 5rem);
+      line-height: 1.02;
+      letter-spacing: 0;
+      max-width: 920px;
+    }
+
+    .hero p {
+      max-width: 700px;
+      margin: 18px 0 0;
+      font-size: 1.08rem;
+      line-height: 1.8;
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    main {
+      padding: 28px 20px 56px;
+    }
+
+    .top-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 0 0 26px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 42px;
+      padding: 10px 14px;
+      border: 1px solid rgba(32, 36, 42, 0.12);
+      border-radius: 8px;
+      background: var(--panel);
+      color: var(--ink);
+      font-weight: 700;
+      text-decoration: none;
+      box-shadow: 0 6px 18px rgba(31, 36, 43, 0.08);
+    }
+
+    .button.primary {
+      background: var(--accent);
+      color: white;
+      border-color: var(--accent);
+    }
+
+    .button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 24px rgba(31, 36, 43, 0.12);
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 340px;
+      gap: 22px;
+      align-items: start;
+    }
+
+    .section-title {
+      margin: 0 0 14px;
+      font-size: 1.35rem;
+      letter-spacing: 0;
+    }
+
+    .timeline {
+      position: relative;
+      display: grid;
+      gap: 14px;
+    }
+
+    .stop {
+      display: grid;
+      grid-template-columns: 82px minmax(0, 1fr);
+      gap: 16px;
+      padding: 18px;
+      border: 1px solid rgba(32, 36, 42, 0.1);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.92);
+      box-shadow: var(--shadow);
+    }
+
+    .time {
+      display: grid;
+      place-items: center;
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      background: #f0f7f7;
+      color: var(--teal);
+      font-weight: 800;
+      line-height: 1.1;
+      text-align: center;
+    }
+
+    .stop h3 {
+      margin: 0 0 7px;
+      font-size: 1.22rem;
+      letter-spacing: 0;
+    }
+
+    .tag {
+      display: inline-flex;
+      margin: 0 0 10px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      color: var(--accent-strong);
+      background: rgba(204, 63, 85, 0.1);
+      font-size: 0.85rem;
+      font-weight: 700;
+    }
+
+    .address,
+    .note {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    .stop-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .small-button {
+      min-height: 36px;
+      padding: 8px 11px;
+      border-radius: 8px;
+      border: 1px solid rgba(32, 36, 42, 0.14);
+      background: #fbfbfa;
+      color: var(--ink);
+      font-weight: 700;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .small-button:hover {
+      border-color: rgba(204, 63, 85, 0.45);
+    }
+
+    aside {
+      position: sticky;
+      top: 18px;
+      display: grid;
+      gap: 14px;
+    }
+
+    .info-panel {
+      padding: 18px;
+      border: 1px solid rgba(32, 36, 42, 0.1);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.95);
+      box-shadow: var(--shadow);
+    }
+
+    .info-panel h2 {
+      margin: 0 0 12px;
+      font-size: 1.12rem;
+      letter-spacing: 0;
+    }
+
+    .route-list {
+      display: grid;
+      gap: 10px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .route-list li {
+      display: grid;
+      grid-template-columns: 28px minmax(0, 1fr);
+      gap: 10px;
+      align-items: start;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .route-list b {
+      color: var(--ink);
+    }
+
+    .pin {
+      display: grid;
+      place-items: center;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: #fff3df;
+      color: var(--gold);
+      font-weight: 800;
+      font-size: 0.85rem;
+    }
+
+    .map-frame {
+      overflow: hidden;
+      border-radius: 8px;
+      border: 1px solid rgba(32, 36, 42, 0.12);
+      background: #eef1f0;
+      aspect-ratio: 4 / 3;
+    }
+
+    .map-frame iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 20px;
+      transform: translateX(-50%) translateY(24px);
+      opacity: 0;
+      pointer-events: none;
+      padding: 10px 14px;
+      border-radius: 8px;
+      background: rgba(32, 36, 42, 0.92);
+      color: white;
+      font-weight: 700;
+      transition: opacity 160ms ease, transform 160ms ease;
+      z-index: 20;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    @media (max-width: 860px) {
+      .hero {
+        min-height: 42vh;
+      }
+
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      aside {
+        position: static;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .hero {
+        padding-top: 34px;
+      }
+
+      .stop {
+        grid-template-columns: 1fr;
+      }
+
+      .time {
+        width: auto;
+        height: auto;
+        min-height: 38px;
+        border-radius: 8px;
+      }
+
+      .button,
+      .small-button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="hero-inner">
+      <p class="eyebrow">9/18 Tokyo · Harajuku</p>
+      <h1>原宿半日購物散步行程</h1>
+      <p>從原宿站出發，先逛太陽眼鏡，再到美妝旗艦店補貨，最後用 Kiddy Land 收尾。路線集中在神宮前，適合步行慢慢逛。</p>
+    </div>
+  </header>
+
+  <main>
+    <nav class="top-actions" aria-label="主要操作">
+      <a class="button primary" id="fullRoute" target="_blank" rel="noreferrer">開啟 Google Maps 完整路線</a>
+      <a class="button" href="https://www.google.com/maps/search/?api=1&query=Harajuku%20Station%2C%20Tokyo" target="_blank" rel="noreferrer">查看原宿站</a>
+    </nav>
+
+    <div class="layout">
+      <section aria-labelledby="timeline-title">
+        <h2 class="section-title" id="timeline-title">建議時間軸</h2>
+        <div class="timeline" id="timeline"></div>
+      </section>
+
+      <aside aria-label="路線與地圖">
+        <section class="info-panel">
+          <h2>步行路線</h2>
+          <ol class="route-list">
+            <li><span class="pin">起</span><span><b>原宿站</b><br>山手線下車後，往神宮前方向走。</span></li>
+            <li><span class="pin">1</span><span><b>eyecon 原宿店</b><br>東急プラザ 原宿「ハラカド」內。</span></li>
+            <li><span class="pin">2</span><span><b>＠cosme TOKYO</b><br>美妝、保養、香氛一次逛。</span></li>
+            <li><span class="pin">3</span><span><b>Kiddy Land</b><br>玩具與角色商品收尾。</span></li>
+          </ol>
+        </section>
+
+        <section class="info-panel">
+          <h2>地圖預覽</h2>
+          <div class="map-frame">
+            <iframe
+              title="原宿行程地圖"
+              loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade"
+              src="https://www.google.com/maps?q=Harajuku%20Station%20eyecon%20Harajuku%20%40cosme%20TOKYO%20Kiddy%20Land%20Jingumae%20Tokyo&output=embed">
+            </iframe>
+          </div>
+        </section>
+
+        <section class="info-panel">
+          <h2>出發前提醒</h2>
+          <p class="note">建議預留 2.5 至 3.5 小時。店鋪營業時間可能會調整，出門前可用每張卡片的 Google Maps 按鈕確認最新資訊。</p>
+        </section>
+
+        <section class="info-panel">
+          <h2>分享給同事</h2>
+          <p class="note">目前這是本機檔案，只有你的電腦能用 file 網址開啟。要讓同事也看得到，請把 HTML 上傳到 GitHub Pages、Netlify、Google Drive 網頁預覽，或公司內部網站，再把公開網址傳給大家。</p>
+        </section>
+      </aside>
+    </div>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite">已複製地址</div>
+
+  <script>
+    const stops = [
+      {
+        time: "10:30",
+        title: "原宿站",
+        tag: "起點 · 山手線",
+        address: "Harajuku Station, Shibuya, Tokyo",
+        mapQuery: "原宿站 Harajuku Station Tokyo",
+        note: "從車站出來後，往神宮前與東急プラザ方向移動。",
+        stay: "出發",
+      },
+      {
+        time: "10:45",
+        title: "eyecon 原宿店",
+        tag: "太陽眼鏡",
+        address: "日本〒150-0001 Tokyo, Shibuya, Jingumae, 6 Chome−31−21 原宿スクエア内 東急プラザ 原宿「ハラカド」",
+        mapQuery: "eyecon 原宿店 東急プラザ 原宿 ハラカド",
+        note: "先逛眼鏡與配件，位置靠近原宿站，適合作為第一站。",
+        stay: "約 35 分鐘",
+      },
+      {
+        time: "11:30",
+        title: "＠cosme TOKYO",
+        tag: "美妝",
+        address: "1 Chome-14-27 Jingumae, Shibuya, Tokyo 150-0001 日本",
+        mapQuery: "＠cosme TOKYO 原宿",
+        note: "大型美妝店，建議把想買品牌先列好，現場會省很多時間。",
+        stay: "約 60 分鐘",
+      },
+      {
+        time: "12:45",
+        title: "Kiddy Land",
+        tag: "玩具店",
+        address: "6 Chome-1-9 Jingumae, Shibuya, Tokyo 150-0001 日本",
+        mapQuery: "Kiddy Land 原宿店 Tokyo",
+        note: "角色商品與伴手禮選擇多，適合放在最後慢慢挑。",
+        stay: "約 45 分鐘",
+      },
+    ];
+
+    const routeUrl = "https://www.google.com/maps/dir/?api=1"
+      + "&origin=" + encodeURIComponent(stops[0].mapQuery)
+      + "&destination=" + encodeURIComponent(stops[3].mapQuery)
+      + "&waypoints=" + encodeURIComponent(stops[1].mapQuery + "|" + stops[2].mapQuery)
+      + "&travelmode=walking";
+
+    document.getElementById("fullRoute").href = routeUrl;
+
+    function mapsSearchUrl(address) {
+      return "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(address);
+    }
+
+    function segmentUrl(index) {
+      const from = stops[index].mapQuery;
+      const to = stops[index + 1].mapQuery;
+      return "https://www.google.com/maps/dir/?api=1"
+        + "&origin=" + encodeURIComponent(from)
+        + "&destination=" + encodeURIComponent(to)
+        + "&travelmode=walking";
+    }
+
+    function showToast() {
+      const toast = document.getElementById("toast");
+      toast.classList.add("show");
+      window.setTimeout(() => toast.classList.remove("show"), 1400);
+    }
+
+    const timeline = document.getElementById("timeline");
+
+    stops.forEach((stop, index) => {
+      const article = document.createElement("article");
+      article.className = "stop";
+      article.innerHTML = `
+        <div class="time"><span>${stop.time}</span></div>
+        <div>
+          <h3>${stop.title}</h3>
+          <span class="tag">${stop.tag} · ${stop.stay}</span>
+          <p class="address">${stop.address}</p>
+          <p class="note">${stop.note}</p>
+          <div class="stop-actions">
+            <a class="small-button" href="${mapsSearchUrl(stop.mapQuery)}" target="_blank" rel="noreferrer">Google Maps</a>
+            ${index < stops.length - 1 ? `<a class="small-button" href="${segmentUrl(index)}" target="_blank" rel="noreferrer">到下一站</a>` : ""}
+            <button class="small-button" type="button" data-copy="${stop.address}">複製地址</button>
+          </div>
+        </div>
+      `;
+      timeline.appendChild(article);
+    });
+
+    document.addEventListener("click", async (event) => {
+      const button = event.target.closest("[data-copy]");
+      if (!button) return;
+      const text = button.getAttribute("data-copy");
+      try {
+        await navigator.clipboard.writeText(text);
+      } catch {
+        const input = document.createElement("textarea");
+        input.value = text;
+        document.body.appendChild(input);
+        input.select();
+        document.execCommand("copy");
+        input.remove();
+      }
+      showToast();
+    });
+  </script>
+</body>
+</html>
