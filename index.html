@@ -349,26 +349,44 @@
     }
 
     .route-list li {
-      position: relative;
       display: grid;
       grid-template-columns: 28px minmax(0, 1fr);
       gap: 10px;
       align-items: start;
       color: var(--muted);
       line-height: 1.5;
-      padding-bottom: 24px;
     }
 
-    .route-list li:not(:last-child)::after {
-      content: "↓";
+    .route-arrow {
+      position: relative;
+      display: block;
+      height: 34px;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .route-arrow::before {
+      content: "";
       position: absolute;
       left: 50%;
-      bottom: 1px;
+      top: 4px;
+      width: 2px;
+      height: 22px;
+      border-radius: 999px;
+      background: linear-gradient(180deg, rgba(204, 63, 85, 0.22), rgba(204, 63, 85, 0.68));
       transform: translateX(-50%);
-      color: rgba(204, 63, 85, 0.72);
-      font-weight: 900;
-      font-size: 1.65rem;
-      line-height: 1;
+    }
+
+    .route-arrow::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 19px;
+      width: 10px;
+      height: 10px;
+      border-right: 2px solid rgba(204, 63, 85, 0.72);
+      border-bottom: 2px solid rgba(204, 63, 85, 0.72);
+      transform: translateX(-50%) rotate(45deg);
     }
 
     .route-list b {
@@ -681,6 +699,12 @@
           <span><b>${stop.title}</b><br>${stop.note}</span>
         `;
         routeList.appendChild(item);
+        if (index < stops.length - 1) {
+          const arrow = document.createElement("li");
+          arrow.className = "route-arrow";
+          arrow.setAttribute("aria-hidden", "true");
+          routeList.appendChild(arrow);
+        }
       });
     }
 
