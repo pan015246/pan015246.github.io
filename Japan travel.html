@@ -1,0 +1,919 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>9/12-9/19 東京旅行行程</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #20242a;
+      --muted: #5f6976;
+      --line: #d9dde3;
+      --paper: #fffdf8;
+      --panel: #ffffff;
+      --accent: #cc3f55;
+      --accent-strong: #9e263d;
+      --teal: #167c80;
+      --gold: #b77716;
+      --shadow: 0 14px 40px rgba(31, 36, 43, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Yu Gothic UI", "Microsoft JhengHei", "Noto Sans TC", Arial, sans-serif;
+      color: var(--ink);
+      background:
+        linear-gradient(90deg, rgba(204, 63, 85, 0.07), transparent 40%),
+        linear-gradient(180deg, #f8fbfd 0%, var(--paper) 42%, #f2f5f4 100%);
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .hero {
+      min-height: 48vh;
+      display: grid;
+      align-items: end;
+      padding: 42px 20px 30px;
+      background:
+        linear-gradient(180deg, rgba(18, 23, 28, 0.18), rgba(18, 23, 28, 0.66)),
+        url("https://images.unsplash.com/photo-1542051841857-5f90071e7989?auto=format&fit=crop&w=1800&q=80") center 44% / cover;
+      color: white;
+    }
+
+    .hero-inner,
+    main {
+      width: min(1120px, 100%);
+      margin: 0 auto;
+    }
+
+    .eyebrow {
+      margin: 0 0 10px;
+      font-size: 0.9rem;
+      letter-spacing: 0;
+      font-weight: 700;
+      color: #ffe0a6;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(2.2rem, 6vw, 5rem);
+      line-height: 1.02;
+      letter-spacing: 0;
+      max-width: 920px;
+    }
+
+    .hero p {
+      max-width: 700px;
+      margin: 18px 0 0;
+      font-size: 1.08rem;
+      line-height: 1.8;
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    main {
+      padding: 28px 20px 56px;
+    }
+
+    .top-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 0 0 18px;
+    }
+
+    .date-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 6px 18px;
+      margin: 0 0 28px;
+    }
+
+    .date-tab {
+      min-height: 32px;
+      padding: 0;
+      border: 0;
+      border-bottom: 2px solid transparent;
+      border-radius: 0;
+      background: transparent;
+      color: var(--ink);
+      cursor: pointer;
+      font: inherit;
+      font-weight: 800;
+    }
+
+    .date-tab.active {
+      border-bottom-color: var(--accent);
+      color: var(--accent-strong);
+    }
+
+    .date-tab:hover {
+      color: var(--accent-strong);
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 42px;
+      padding: 10px 14px;
+      border: 1px solid rgba(32, 36, 42, 0.12);
+      border-radius: 8px;
+      background: var(--panel);
+      color: var(--ink);
+      font-weight: 700;
+      text-decoration: none;
+      box-shadow: 0 6px 18px rgba(31, 36, 43, 0.08);
+    }
+
+    .button.primary {
+      background: var(--accent);
+      color: white;
+      border-color: var(--accent);
+    }
+
+    .button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 24px rgba(31, 36, 43, 0.12);
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 340px;
+      gap: 22px;
+      align-items: start;
+    }
+
+    .section-title {
+      margin: 0 0 14px;
+      font-size: 1.35rem;
+      letter-spacing: 0;
+    }
+
+    .timeline {
+      position: relative;
+      display: grid;
+      gap: 14px;
+    }
+
+    .stop {
+      display: grid;
+      grid-template-columns: 96px minmax(0, 1fr);
+      gap: 18px;
+      padding: 20px;
+      border: 1px solid rgba(32, 36, 42, 0.1);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.92);
+      box-shadow: var(--shadow);
+      cursor: grab;
+      transition: border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+    }
+
+    .stop:hover {
+      border-color: rgba(204, 63, 85, 0.24);
+      box-shadow: 0 16px 42px rgba(31, 36, 43, 0.14);
+      transform: translateY(-1px);
+    }
+
+    .stop.dragging {
+      opacity: 0.56;
+      cursor: grabbing;
+    }
+
+    .stop.drag-over {
+      border-color: rgba(204, 63, 85, 0.62);
+      box-shadow: 0 16px 42px rgba(204, 63, 85, 0.16);
+    }
+
+    .empty-state {
+      padding: 28px;
+      border: 1px dashed rgba(32, 36, 42, 0.22);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.76);
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .time {
+      display: grid;
+      gap: 7px;
+      place-items: center;
+      width: 82px;
+      min-height: 82px;
+      padding: 10px 8px;
+      border-radius: 8px;
+      background: #f0f7f7;
+      color: var(--teal);
+      font-weight: 800;
+      line-height: 1.1;
+      text-align: center;
+    }
+
+    .time-input {
+      width: 66px;
+      min-height: 34px;
+      border: 1px solid rgba(22, 124, 128, 0.18);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.78);
+      color: var(--teal);
+      font: inherit;
+      font-weight: 900;
+      text-align: center;
+    }
+
+    .time-input:focus {
+      outline: 2px solid rgba(22, 124, 128, 0.24);
+      border-color: rgba(22, 124, 128, 0.5);
+      background: white;
+    }
+
+    .stop h3 {
+      margin: 0 0 7px;
+      font-size: 1.22rem;
+      letter-spacing: 0;
+    }
+
+    .tag {
+      display: inline-flex;
+      margin: 0 0 10px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      color: var(--accent-strong);
+      background: rgba(204, 63, 85, 0.1);
+      font-size: 0.85rem;
+      font-weight: 700;
+    }
+
+    .address,
+    .note {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    .stop-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .small-button {
+      min-height: 36px;
+      padding: 8px 11px;
+      border-radius: 8px;
+      border: 1px solid rgba(32, 36, 42, 0.14);
+      background: #fbfbfa;
+      color: var(--ink);
+      font-weight: 700;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .small-button:hover {
+      border-color: rgba(204, 63, 85, 0.45);
+    }
+
+    aside {
+      position: sticky;
+      top: 18px;
+      display: grid;
+      gap: 14px;
+    }
+
+    .info-panel {
+      padding: 18px;
+      border: 1px solid rgba(32, 36, 42, 0.1);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.95);
+      box-shadow: var(--shadow);
+    }
+
+    .info-panel h2 {
+      margin: 0 0 12px;
+      font-size: 1.12rem;
+      letter-spacing: 0;
+    }
+
+    .route-list {
+      display: grid;
+      gap: 10px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .route-list li {
+      display: grid;
+      grid-template-columns: 28px minmax(0, 1fr);
+      gap: 10px;
+      align-items: start;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .route-list b {
+      color: var(--ink);
+    }
+
+    .pin {
+      display: grid;
+      place-items: center;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: #fff3df;
+      color: var(--gold);
+      font-weight: 800;
+      font-size: 0.85rem;
+    }
+
+    .reminder-list {
+      display: grid;
+      gap: 9px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .reminder-list li {
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 20px;
+      transform: translateX(-50%) translateY(24px);
+      opacity: 0;
+      pointer-events: none;
+      padding: 10px 14px;
+      border-radius: 8px;
+      background: rgba(32, 36, 42, 0.92);
+      color: white;
+      font-weight: 700;
+      transition: opacity 160ms ease, transform 160ms ease;
+      z-index: 20;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    @media (max-width: 860px) {
+      .hero {
+        min-height: 42vh;
+      }
+
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      aside {
+        position: static;
+      }
+
+      .date-tabs {
+        gap: 6px 14px;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .hero {
+        padding-top: 34px;
+      }
+
+      .stop {
+        grid-template-columns: 1fr;
+      }
+
+      .time {
+        width: auto;
+        height: auto;
+        min-height: 38px;
+        border-radius: 8px;
+        grid-template-columns: auto minmax(90px, 120px);
+        justify-content: start;
+      }
+
+      .button,
+      .small-button {
+        width: 100%;
+      }
+
+      .date-tabs {
+        gap: 6px 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="hero-inner">
+      <p class="eyebrow" id="heroEyebrow">9/12-9/19 Tokyo</p>
+      <h1 id="heroTitle">東京旅行行程</h1>
+      <p id="heroDescription">點選日期查看當日行程。已安排的日期會顯示時間軸、路線順序與 Google Maps 導航。</p>
+    </div>
+  </header>
+
+  <main>
+    <nav class="top-actions" aria-label="主要操作">
+      <a class="button primary" id="fullRoute" target="_blank" rel="noreferrer">開啟 Google Maps 完整路線</a>
+    </nav>
+
+    <nav class="date-tabs" id="dateTabs" aria-label="選擇日期"></nav>
+
+    <div class="layout">
+      <section aria-labelledby="timeline-title">
+        <h2 class="section-title" id="timeline-title">行程</h2>
+        <div class="timeline" id="timeline"></div>
+      </section>
+
+      <aside aria-label="路線與地圖">
+        <section class="info-panel">
+          <h2 id="routeTitle">步行路線</h2>
+          <ol class="route-list" id="routeList"></ol>
+        </section>
+
+        <section class="info-panel">
+          <h2>出發前提醒</h2>
+          <ul class="reminder-list" id="reminderList"></ul>
+        </section>
+
+      </aside>
+    </div>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite">已複製地址</div>
+
+  <script>
+    const dates = ["9/12", "9/13", "9/14", "9/15", "9/16", "9/17", "9/18", "9/19"];
+    const itineraries = {
+      "9/12": {
+        eyebrow: "9/12 Tokyo",
+        title: "9/12 行程待補",
+        description: "這天還沒有填入景點。新增資料後，日期切換會自動顯示當日時間軸與路線。",
+        stops: [],
+      },
+      "9/13": {
+        eyebrow: "9/13 Tokyo",
+        title: "9/13 行程待補",
+        description: "這天還沒有填入景點。新增資料後，日期切換會自動顯示當日時間軸與路線。",
+        stops: [],
+      },
+      "9/14": {
+        eyebrow: "9/14 Tokyo",
+        title: "9/14 行程待補",
+        description: "這天還沒有填入景點。新增資料後，日期切換會自動顯示當日時間軸與路線。",
+        stops: [],
+      },
+      "9/15": {
+        eyebrow: "9/15 Tokyo",
+        title: "9/15 行程待補",
+        description: "這天還沒有填入景點。新增資料後，日期切換會自動顯示當日時間軸與路線。",
+        stops: [],
+      },
+      "9/16": {
+        eyebrow: "9/16 Tokyo",
+        title: "9/16 行程待補",
+        description: "這天還沒有填入景點。新增資料後，日期切換會自動顯示當日時間軸與路線。",
+        stops: [],
+      },
+      "9/17": {
+        eyebrow: "9/17 Tokyo",
+        title: "9/17 行程待補",
+        description: "這天還沒有填入景點。新增資料後，日期切換會自動顯示當日時間軸與路線。",
+        stops: [],
+      },
+      "9/18": {
+        eyebrow: "9/18 Tokyo · Setagaya / Harajuku",
+        title: "豪徳寺與原宿半日散步行程",
+        description: "先到世田谷豪徳寺，再移動到原宿逛太陽眼鏡、美妝旗艦店與 Kiddy Land。可拖曳卡片調整順序，完整路線會跟著更新。",
+        stops: [
+          {
+            time: "09:00",
+            title: "豪徳寺",
+            tag: "寺院 · 世田谷",
+            address: "〒154-0021 東京都世田谷区豪徳寺2丁目24−7",
+            mapQuery: "豪徳寺 東京都世田谷区豪徳寺2丁目24-7",
+            note: "以招福貓聞名的世田谷寺院，適合作為早上第一站。",
+            stay: "約 60 分鐘",
+          },
+          {
+            time: "10:30",
+            title: "原宿駅",
+            tag: "起點 · 山手線",
+            address: "〒150-0001 東京都渋谷区神宮前1丁目 原宿駅",
+            mapQuery: "JR 原宿駅 山手線 東京都渋谷区神宮前1丁目",
+            note: "從車站出來後，往神宮前與東急プラザ方向移動。",
+            stay: "出發",
+          },
+          {
+            time: "10:45",
+            title: "eyecon 原宿店",
+            tag: "太陽眼鏡",
+            address: "〒150-0001 東京都渋谷区神宮前1丁目11−6 ラフォーレ原宿 1.5F",
+            mapQuery: "eyecon ラフォーレ原宿 1.5F",
+            note: "先逛眼鏡與配件，位置在ラフォーレ原宿，適合作為第一站。",
+            stay: "約 35 分鐘",
+          },
+          {
+            time: "11:30",
+            title: "＠cosme TOKYO",
+            tag: "美妝",
+            address: "1 Chome-14-27 Jingumae, Shibuya, Tokyo 150-0001 日本",
+            mapQuery: "@cosme TOKYO 東京都渋谷区神宮前1丁目14-27",
+            note: "大型美妝店，建議把想買品牌先列好，現場會省很多時間。",
+            stay: "約 60 分鐘",
+          },
+          {
+            time: "12:45",
+            title: "Kiddy Land",
+            tag: "玩具店",
+            address: "6 Chome-1-9 Jingumae, Shibuya, Tokyo 150-0001 日本",
+            mapQuery: "キデイランド原宿店 6-1-9 Jingumae Shibuya",
+            note: "角色商品與伴手禮選擇多，適合放在最後慢慢挑。",
+            stay: "約 45 分鐘",
+          },
+        ],
+      },
+      "9/19": {
+        eyebrow: "9/19 Tokyo",
+        title: "9/19 行程待補",
+        description: "這天還沒有填入景點。新增資料後，日期切換會自動顯示當日時間軸與路線。",
+        stops: [],
+      },
+    };
+
+    function dateToHash(date) {
+      return "date-" + date.replace("/", "-");
+    }
+
+    function hashToDate(hash) {
+      return hash.replace(/^#?date-/, "").replace("-", "/");
+    }
+
+    function getInitialDate() {
+      const dateFromHash = hashToDate(window.location.hash);
+      if (dates.includes(dateFromHash)) return dateFromHash;
+
+      const savedDate = window.localStorage.getItem("selectedTravelDate");
+      if (dates.includes(savedDate)) return savedDate;
+
+      return "9/18";
+    }
+
+    let selectedDate = getInitialDate();
+    let draggedStopIndex = null;
+
+    function mapsSearchUrl(address) {
+      return "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(address);
+    }
+
+    function segmentUrl(index) {
+      const stops = itineraries[selectedDate].stops;
+      const from = stops[index].mapQuery;
+      const to = stops[index + 1].mapQuery;
+      return "https://www.google.com/maps/dir/?api=1"
+        + "&origin=" + encodeURIComponent(from)
+        + "&destination=" + encodeURIComponent(to)
+        + "&travelmode=walking";
+    }
+
+    function fullRouteUrl(stops) {
+      if (stops.length < 2) return "";
+      const waypoints = stops.slice(1, -1).map((stop) => stop.mapQuery).join("|");
+      let url = "https://www.google.com/maps/dir/?api=1"
+        + "&origin=" + encodeURIComponent(stops[0].mapQuery)
+        + "&destination=" + encodeURIComponent(stops[stops.length - 1].mapQuery)
+        + "&travelmode=walking";
+      if (waypoints) url += "&waypoints=" + encodeURIComponent(waypoints);
+      return url;
+    }
+
+    function formatTime(value) {
+      const text = value.trim();
+      if (!text) return "未定";
+
+      const colonMatch = text.match(/^(\d{1,2})[:：](\d{1,2})$/);
+      if (colonMatch) {
+        const hour = Math.min(Number(colonMatch[1]), 23);
+        const minute = Math.min(Number(colonMatch[2]), 59);
+        return String(hour).padStart(2, "0") + ":" + String(minute).padStart(2, "0");
+      }
+
+      const digits = text.replace(/\D/g, "");
+      if (!digits) return text;
+
+      if (digits.length <= 2) {
+        const hour = Math.min(Number(digits), 23);
+        return String(hour).padStart(2, "0") + ":00";
+      }
+
+      const hour = Math.min(Number(digits.slice(0, -2)), 23);
+      const minute = Math.min(Number(digits.slice(-2)), 59);
+      return String(hour).padStart(2, "0") + ":" + String(minute).padStart(2, "0");
+    }
+
+    function showToast() {
+      const toast = document.getElementById("toast");
+      toast.classList.add("show");
+      window.setTimeout(() => toast.classList.remove("show"), 1400);
+    }
+
+    const timeline = document.getElementById("timeline");
+    const dateTabs = document.getElementById("dateTabs");
+    const routeList = document.getElementById("routeList");
+    const reminderList = document.getElementById("reminderList");
+    const fullRoute = document.getElementById("fullRoute");
+
+    function renderDateTabs() {
+      dateTabs.innerHTML = "";
+      dates.forEach((date) => {
+        const button = document.createElement("button");
+        button.className = "date-tab" + (date === selectedDate ? " active" : "");
+        button.type = "button";
+        button.textContent = date;
+        button.setAttribute("aria-pressed", date === selectedDate ? "true" : "false");
+        button.addEventListener("click", () => {
+          selectedDate = date;
+          window.localStorage.setItem("selectedTravelDate", selectedDate);
+          window.history.replaceState(null, "", "#" + dateToHash(selectedDate));
+          renderPage();
+        });
+        dateTabs.appendChild(button);
+      });
+    }
+
+    function renderRouteList(stops) {
+      routeList.innerHTML = "";
+      if (!stops.length) {
+        routeList.innerHTML = '<li><span class="pin">-</span><span><b>尚未安排</b><br>補上景點後會在這裡顯示路線順序。</span></li>';
+        return;
+      }
+
+      stops.forEach((stop, index) => {
+        const item = document.createElement("li");
+        item.innerHTML = `
+          <span class="pin">${index === 0 ? "起" : index}</span>
+          <span><b>${stop.title}</b><br>${stop.note}</span>
+        `;
+        routeList.appendChild(item);
+      });
+    }
+
+    function parseTimeToMinutes(time) {
+      const match = time.match(/^(\d{2}):(\d{2})$/);
+      if (!match) return null;
+      return Number(match[1]) * 60 + Number(match[2]);
+    }
+
+    function generateReminders(stops) {
+      if (!stops.length) {
+        return ["這天尚未安排景點，補上行程後會自動產生提醒。"];
+      }
+
+      const reminders = [];
+      const firstStop = stops[0];
+      const firstTime = parseTimeToMinutes(firstStop.time);
+
+      reminders.push(`當日共 ${stops.length} 個行程，完整路線會依照目前卡片順序規劃。`);
+
+      if (firstTime !== null && firstTime < 10 * 60) {
+        reminders.push(`第一站是 ${firstStop.time} 的 ${firstStop.title}，建議前一晚先確認交通與出門時間。`);
+      }
+
+      if (stops.some((stop) => stop.time === "未定")) {
+        reminders.push("有行程時間尚未設定，建議先補上時間，路線順序會比較好掌握。");
+      }
+
+      const routeText = stops.map((stop) => stop.title + " " + stop.address).join(" ");
+      if (routeText.includes("豪徳寺") && routeText.includes("原宿")) {
+        reminders.push("豪徳寺到原宿屬跨區移動，建議預留電車轉乘與步行緩衝。");
+      }
+
+      if (stops.some((stop) => stop.title.includes("＠cosme") || stop.title.includes("@cosme"))) {
+        reminders.push("＠cosme TOKYO 容易逛比較久，若有必買品項可先列清單。");
+      }
+
+      if (stops.some((stop) => stop.title.includes("Kiddy") || stop.title.includes("キデイ"))) {
+        reminders.push("Kiddy Land 商品樓層多，若要買伴手禮可預留結帳時間。");
+      }
+
+      reminders.push("店鋪營業時間可能調整，出發前可用每張卡片的 Google Maps 按鈕再確認。");
+      return reminders;
+    }
+
+    function renderReminders(stops) {
+      reminderList.innerHTML = "";
+      generateReminders(stops).forEach((reminder) => {
+        const item = document.createElement("li");
+        item.textContent = reminder;
+        reminderList.appendChild(item);
+      });
+    }
+
+    function renderTimeline(stops) {
+      timeline.innerHTML = "";
+      if (!stops.length) {
+        timeline.innerHTML = '<div class="empty-state">這一天目前還沒有行程。之後可以把景點、時間、地址加入資料區，頁面會自動產生時間軸和 Google Maps 按鈕。</div>';
+        return;
+      }
+
+      stops.forEach((stop, index) => {
+        const article = document.createElement("article");
+        article.className = "stop";
+        article.draggable = true;
+        article.dataset.index = index;
+        article.innerHTML = `
+          <div class="time">
+            <input class="time-input" type="text" value="${stop.time}" data-time-index="${index}" aria-label="${stop.title} 時間" placeholder="09:00">
+          </div>
+          <div>
+            <h3>${stop.title}</h3>
+            <span class="tag">${stop.tag} · ${stop.stay}</span>
+            <p class="address">${stop.address}</p>
+            <p class="note">${stop.note}</p>
+            <div class="stop-actions">
+              <a class="small-button" href="${mapsSearchUrl(stop.mapQuery)}" target="_blank" rel="noreferrer">Google Maps</a>
+              ${index < stops.length - 1 ? `<a class="small-button" href="${segmentUrl(index)}" target="_blank" rel="noreferrer">到下一站</a>` : ""}
+              <button class="small-button" type="button" data-copy="${stop.address}">複製地址</button>
+            </div>
+          </div>
+        `;
+        timeline.appendChild(article);
+      });
+    }
+
+    function saveStopOrder() {
+      const order = itineraries[selectedDate].stops.map((stop) => stop.title);
+      window.localStorage.setItem("travelStopOrder-" + selectedDate, JSON.stringify(order));
+    }
+
+    function saveStopTimes(date = selectedDate) {
+      const times = itineraries[date].stops.reduce((result, stop) => {
+        result[stop.title] = stop.time;
+        return result;
+      }, {});
+      window.localStorage.setItem("travelStopTimes-" + date, JSON.stringify(times));
+    }
+
+    function loadStopOrder(date) {
+      const savedOrder = window.localStorage.getItem("travelStopOrder-" + date);
+      if (!savedOrder) return;
+
+      try {
+        const order = JSON.parse(savedOrder);
+        const stops = itineraries[date].stops;
+        if (!Array.isArray(order) || order.length !== stops.length) return;
+
+        const orderedStops = order
+          .map((title) => stops.find((stop) => stop.title === title))
+          .filter(Boolean);
+        if (orderedStops.length === stops.length) {
+          itineraries[date].stops = orderedStops;
+        }
+      } catch {
+        window.localStorage.removeItem("travelStopOrder-" + date);
+      }
+    }
+
+    function loadStopTimes(date) {
+      const savedTimes = window.localStorage.getItem("travelStopTimes-" + date);
+      if (!savedTimes) return;
+
+      try {
+        const times = JSON.parse(savedTimes);
+        itineraries[date].stops.forEach((stop) => {
+          if (typeof times[stop.title] === "string") {
+            stop.time = times[stop.title];
+          }
+        });
+      } catch {
+        window.localStorage.removeItem("travelStopTimes-" + date);
+      }
+    }
+
+    function renderActions(stops) {
+      const hasRoute = stops.length > 1;
+
+      fullRoute.href = hasRoute ? fullRouteUrl(stops) : "#";
+      fullRoute.setAttribute("aria-disabled", hasRoute ? "false" : "true");
+      fullRoute.style.pointerEvents = hasRoute ? "" : "none";
+      fullRoute.style.opacity = hasRoute ? "1" : "0.48";
+    }
+
+    function renderPage() {
+      const itinerary = itineraries[selectedDate];
+      const stops = itinerary.stops;
+
+      document.getElementById("heroEyebrow").textContent = itinerary.eyebrow;
+      document.getElementById("heroTitle").textContent = itinerary.title;
+      document.getElementById("heroDescription").textContent = itinerary.description;
+      document.getElementById("timeline-title").textContent = selectedDate + " 行程";
+      document.getElementById("routeTitle").textContent = selectedDate + " 路線";
+
+      renderDateTabs();
+      renderTimeline(stops);
+      renderRouteList(stops);
+      renderReminders(stops);
+      renderActions(stops);
+    }
+
+    timeline.addEventListener("dragstart", (event) => {
+      const card = event.target.closest(".stop");
+      if (!card) return;
+      if (event.target.closest("input, button, a")) {
+        event.preventDefault();
+        return;
+      }
+      draggedStopIndex = Number(card.dataset.index);
+      card.classList.add("dragging");
+      event.dataTransfer.effectAllowed = "move";
+    });
+
+    timeline.addEventListener("dragover", (event) => {
+      const card = event.target.closest(".stop");
+      if (!card || draggedStopIndex === null) return;
+      event.preventDefault();
+      card.classList.add("drag-over");
+      event.dataTransfer.dropEffect = "move";
+    });
+
+    timeline.addEventListener("dragleave", (event) => {
+      const card = event.target.closest(".stop");
+      if (card) card.classList.remove("drag-over");
+    });
+
+    timeline.addEventListener("drop", (event) => {
+      const card = event.target.closest(".stop");
+      if (!card || draggedStopIndex === null) return;
+      event.preventDefault();
+
+      const targetIndex = Number(card.dataset.index);
+      const stops = itineraries[selectedDate].stops;
+      const [movedStop] = stops.splice(draggedStopIndex, 1);
+      stops.splice(targetIndex, 0, movedStop);
+      draggedStopIndex = null;
+      saveStopOrder();
+      renderPage();
+    });
+
+    timeline.addEventListener("dragend", () => {
+      draggedStopIndex = null;
+      document.querySelectorAll(".stop").forEach((card) => {
+        card.classList.remove("dragging", "drag-over");
+      });
+    });
+
+    timeline.addEventListener("change", (event) => {
+      const input = event.target.closest("[data-time-index]");
+      if (!input) return;
+
+      const stop = itineraries[selectedDate].stops[Number(input.dataset.timeIndex)];
+      stop.time = formatTime(input.value);
+      input.value = stop.time;
+      saveStopTimes();
+      renderReminders(itineraries[selectedDate].stops);
+    });
+
+    if (window.location.hash !== "#" + dateToHash(selectedDate)) {
+      window.history.replaceState(null, "", "#" + dateToHash(selectedDate));
+    }
+
+    dates.forEach((date) => {
+      loadStopOrder(date);
+      loadStopTimes(date);
+    });
+    renderPage();
+
+    document.addEventListener("click", async (event) => {
+      const button = event.target.closest("[data-copy]");
+      if (!button) return;
+      const text = button.getAttribute("data-copy");
+      try {
+        await navigator.clipboard.writeText(text);
+      } catch {
+        const input = document.createElement("textarea");
+        input.value = text;
+        document.body.appendChild(input);
+        input.select();
+        document.execCommand("copy");
+        input.remove();
+      }
+      showToast();
+    });
+  </script>
+</body>
+</html>
