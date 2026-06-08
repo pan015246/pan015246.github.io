@@ -41,7 +41,7 @@
       min-height: 48vh;
       display: grid;
       align-items: end;
-      padding: 42px 20px 30px;
+      padding: 42px 0 30px;
       background:
         linear-gradient(180deg, rgba(18, 23, 28, 0.18), rgba(18, 23, 28, 0.66)),
         url("https://images.unsplash.com/photo-1542051841857-5f90071e7989?auto=format&fit=crop&w=1800&q=80") center 44% / cover;
@@ -52,6 +52,8 @@
     main {
       width: min(1120px, 100%);
       margin: 0 auto;
+      padding-left: 20px;
+      padding-right: 20px;
     }
 
     .eyebrow {
@@ -79,7 +81,8 @@
     }
 
     main {
-      padding: 28px 20px 56px;
+      padding-top: 28px;
+      padding-bottom: 56px;
     }
 
     .top-actions {
@@ -113,6 +116,12 @@
     .date-tab.active {
       border-bottom-color: var(--accent);
       color: var(--accent-strong);
+    }
+
+    .date-tab.drop-target {
+      color: var(--accent-strong);
+      border-bottom-color: var(--accent);
+      background: rgba(204, 63, 85, 0.08);
     }
 
     .date-tab:hover {
@@ -162,10 +171,16 @@
     .timeline {
       position: relative;
       display: grid;
-      gap: 14px;
+      gap: 0;
     }
 
-    .stop {
+    .stop-block {
+      position: relative;
+      padding-bottom: 14px;
+    }
+
+    .stop-card {
+      position: relative;
       display: grid;
       grid-template-columns: 96px minmax(0, 1fr);
       gap: 18px;
@@ -174,24 +189,54 @@
       border-radius: 8px;
       background: rgba(255, 255, 255, 0.92);
       box-shadow: var(--shadow);
-      cursor: grab;
       transition: border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
     }
 
-    .stop:hover {
+    .stop-card:hover {
       border-color: rgba(204, 63, 85, 0.24);
       box-shadow: 0 16px 42px rgba(31, 36, 43, 0.14);
       transform: translateY(-1px);
     }
 
-    .stop.dragging {
+    .stop-card.dragging {
       opacity: 0.56;
       cursor: grabbing;
     }
 
-    .stop.drag-over {
+    .stop-card.drag-over {
       border-color: rgba(204, 63, 85, 0.62);
       box-shadow: 0 16px 42px rgba(204, 63, 85, 0.16);
+    }
+
+    .drag-button {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      display: grid;
+      place-items: center;
+      width: 34px;
+      height: 34px;
+      border: 1px solid rgba(32, 36, 42, 0.12);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.92);
+      color: var(--muted);
+      cursor: grab;
+      box-shadow: 0 6px 16px rgba(31, 36, 43, 0.08);
+    }
+
+    .drag-button:hover {
+      color: var(--accent-strong);
+      border-color: rgba(204, 63, 85, 0.3);
+    }
+
+    .drag-button:active {
+      cursor: grabbing;
+    }
+
+    .drag-button svg {
+      width: 18px;
+      height: 18px;
+      pointer-events: none;
     }
 
     .empty-state {
@@ -244,11 +289,47 @@
 
     .tag {
       display: inline-flex;
-      margin: 0 0 10px;
       padding: 4px 8px;
       border-radius: 999px;
       color: var(--accent-strong);
       background: rgba(204, 63, 85, 0.1);
+      font-size: 0.85rem;
+      font-weight: 700;
+    }
+
+    .area-tag {
+      display: inline-flex;
+      padding: 4px 8px;
+      border-radius: 999px;
+      color: var(--gold);
+      background: rgba(183, 119, 22, 0.12);
+      font-size: 0.85rem;
+      font-weight: 700;
+    }
+
+    .lodging-tag {
+      display: inline-flex;
+      padding: 4px 8px;
+      border-radius: 999px;
+      color: var(--teal);
+      background: rgba(22, 124, 128, 0.12);
+      font-size: 0.85rem;
+      font-weight: 700;
+    }
+
+    .meta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin: 0 0 10px;
+    }
+
+    .stay-tag {
+      display: inline-flex;
+      padding: 4px 8px;
+      border-radius: 999px;
+      color: var(--muted);
+      background: rgba(95, 105, 118, 0.1);
       font-size: 0.85rem;
       font-weight: 700;
     }
@@ -260,6 +341,63 @@
       line-height: 1.65;
     }
 
+    .memo-display {
+      margin: 0 0 12px;
+      padding: 9px 10px;
+      border-left: 3px solid rgba(204, 63, 85, 0.44);
+      border-radius: 8px;
+      background: rgba(204, 63, 85, 0.06);
+      color: var(--muted);
+      line-height: 1.55;
+      white-space: pre-wrap;
+    }
+
+    .memo-modal {
+      position: fixed;
+      inset: 0;
+      display: none;
+      place-items: center;
+      padding: 20px;
+      background: rgba(32, 36, 42, 0.42);
+      z-index: 30;
+    }
+
+    .memo-modal.open {
+      display: grid;
+    }
+
+    .memo-dialog {
+      width: min(520px, 100%);
+      padding: 18px;
+      border-radius: 8px;
+      background: white;
+      box-shadow: 0 18px 52px rgba(31, 36, 43, 0.22);
+    }
+
+    .memo-dialog h2 {
+      margin: 0 0 12px;
+      font-size: 1.15rem;
+    }
+
+    .memo-textarea {
+      width: 100%;
+      min-height: 150px;
+      padding: 10px;
+      border: 1px solid rgba(32, 36, 42, 0.16);
+      border-radius: 8px;
+      color: var(--ink);
+      font: inherit;
+      line-height: 1.55;
+      resize: vertical;
+    }
+
+    .memo-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
     .stop-actions {
       display: flex;
       flex-wrap: wrap;
@@ -269,11 +407,12 @@
 
     .small-button {
       min-height: 36px;
-      padding: 8px 11px;
+      padding: 7px 10px;
       border-radius: 8px;
       border: 1px solid rgba(32, 36, 42, 0.14);
       background: #fbfbfa;
       color: var(--ink);
+      font-size: 0.92rem;
       font-weight: 700;
       text-decoration: none;
       cursor: pointer;
@@ -304,6 +443,18 @@
       letter-spacing: 0;
     }
 
+    .panel-title-route {
+      color: var(--accent-strong);
+    }
+
+    .panel-title-lodging {
+      color: var(--teal);
+    }
+
+    .panel-title-reminder {
+      color: var(--gold);
+    }
+
     .route-list {
       display: grid;
       gap: 10px;
@@ -319,6 +470,38 @@
       align-items: start;
       color: var(--muted);
       line-height: 1.5;
+    }
+
+    .route-arrow {
+      position: relative;
+      display: block;
+      height: 34px;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .route-arrow::before {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 4px;
+      width: 2px;
+      height: 22px;
+      border-radius: 999px;
+      background: linear-gradient(180deg, rgba(204, 63, 85, 0.22), rgba(204, 63, 85, 0.68));
+      transform: translateX(-50%);
+    }
+
+    .route-arrow::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 19px;
+      width: 10px;
+      height: 10px;
+      border-right: 2px solid rgba(204, 63, 85, 0.72);
+      border-bottom: 2px solid rgba(204, 63, 85, 0.72);
+      transform: translateX(-50%) rotate(45deg);
     }
 
     .route-list b {
@@ -350,25 +533,29 @@
       line-height: 1.55;
     }
 
-    .toast {
-      position: fixed;
-      left: 50%;
-      bottom: 20px;
-      transform: translateX(-50%) translateY(24px);
-      opacity: 0;
-      pointer-events: none;
-      padding: 10px 14px;
-      border-radius: 8px;
-      background: rgba(32, 36, 42, 0.92);
-      color: white;
-      font-weight: 700;
-      transition: opacity 160ms ease, transform 160ms ease;
-      z-index: 20;
+    .lodging-list {
+      display: grid;
+      gap: 12px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
     }
 
-    .toast.show {
-      opacity: 1;
-      transform: translateX(-50%) translateY(0);
+    .lodging-list li {
+      padding: 12px;
+      border-radius: 8px;
+      background: rgba(22, 124, 128, 0.06);
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .lodging-list b {
+      color: var(--ink);
+    }
+
+    .lodging-address {
+      margin-top: 3px;
+      color: var(--muted);
     }
 
     @media (max-width: 860px) {
@@ -394,7 +581,11 @@
         padding-top: 34px;
       }
 
-      .stop {
+      h1 {
+        font-size: clamp(2rem, 12vw, 3.3rem);
+      }
+
+      .stop-card {
         grid-template-columns: 1fr;
       }
 
@@ -413,7 +604,13 @@
       }
 
       .date-tabs {
-        gap: 6px 12px;
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 8px 12px;
+      }
+
+      .date-tab {
+        justify-self: center;
       }
     }
   </style>
@@ -442,12 +639,17 @@
 
       <aside aria-label="路線與地圖">
         <section class="info-panel">
-          <h2 id="routeTitle">步行路線</h2>
+          <h2 class="panel-title-route" id="routeTitle">步行路線</h2>
           <ol class="route-list" id="routeList"></ol>
         </section>
 
         <section class="info-panel">
-          <h2>出發前提醒</h2>
+          <h2 class="panel-title-lodging" id="lodgingTitle">住宿</h2>
+          <ul class="lodging-list" id="lodgingList"></ul>
+        </section>
+
+        <section class="info-panel">
+          <h2 class="panel-title-reminder">出發前提醒</h2>
           <ul class="reminder-list" id="reminderList"></ul>
         </section>
 
@@ -455,40 +657,135 @@
     </div>
   </main>
 
-  <div class="toast" id="toast" role="status" aria-live="polite">已複製地址</div>
+  <div class="memo-modal" id="memoModal" role="dialog" aria-modal="true" aria-labelledby="memoTitle">
+    <div class="memo-dialog">
+      <h2 id="memoTitle">備註</h2>
+      <textarea class="memo-textarea" id="memoTextarea" placeholder="輸入備註"></textarea>
+      <div class="memo-actions">
+        <button class="small-button" type="button" id="memoCancel">取消</button>
+        <button class="small-button" type="button" id="memoSave">儲存</button>
+      </div>
+    </div>
+  </div>
 
   <script>
     const dates = ["9/12", "9/13", "9/14", "9/15", "9/16", "9/17", "9/18", "9/19"];
     const itineraries = {
       "9/12": {
-        eyebrow: "9/12 Tokyo",
-        title: "9/12 行程待補",
-        description: "這天還沒有填入景點。新增資料後，日期切換會自動顯示當日時間軸與路線。",
-        stops: [],
+        eyebrow: "9/12 Mishima",
+        title: "9/12 住宿",
+        description: "三島站周邊住宿日，已加入東橫INN 富士山三島站。",
+        stops: [
+          {
+            time: "未定",
+            title: "羽田機場第三航廈",
+            tag: "機場 · 羽田",
+            address: "東京都大田区羽田空港2丁目6-5",
+            mapQuery: "羽田空港 第3ターミナル 東京都大田区羽田空港2丁目6-5",
+            note: "抵達或出發航廈，建議確認航空公司櫃台與交通動線。",
+            stay: "航廈",
+          },
+          {
+            time: "未定",
+            title: "東橫INN 富士山三島站",
+            tag: "住宿 · 三島",
+            address: "静岡県三島市文教町1-5-7",
+            mapQuery: "東横INN富士山三島駅 静岡県三島市文教町1-5-7",
+            note: "三島站附近住宿，出發前可確認入住時間與交通。",
+            stay: "住宿",
+          },
+        ],
       },
       "9/13": {
-        eyebrow: "9/13 Tokyo",
-        title: "9/13 行程待補",
-        description: "這天還沒有填入景點。新增資料後，日期切換會自動顯示當日時間軸與路線。",
-        stops: [],
+        eyebrow: "9/13 Mishima",
+        title: "9/13 住宿",
+        description: "三島站周邊住宿日，已加入東橫INN 富士山三島站。",
+        stops: [
+          {
+            time: "未定",
+            title: "東橫INN 富士山三島站",
+            tag: "住宿 · 三島",
+            address: "静岡県三島市文教町1-5-7",
+            mapQuery: "東横INN富士山三島駅 静岡県三島市文教町1-5-7",
+            note: "三島站附近住宿，出發前可確認入住時間與交通。",
+            stay: "住宿",
+          },
+        ],
       },
       "9/14": {
-        eyebrow: "9/14 Tokyo",
-        title: "9/14 行程待補",
-        description: "這天還沒有填入景點。新增資料後，日期切換會自動顯示當日時間軸與路線。",
-        stops: [],
+        eyebrow: "9/14 Mishima",
+        title: "9/14 住宿",
+        description: "三島站周邊住宿日，已加入東橫INN 富士山三島站。",
+        stops: [
+          {
+            time: "未定",
+            title: "東橫INN 富士山三島站",
+            tag: "住宿 · 三島",
+            address: "静岡県三島市文教町1-5-7",
+            mapQuery: "東横INN富士山三島駅 静岡県三島市文教町1-5-7",
+            note: "三島站附近住宿，出發前可確認入住時間與交通。",
+            stay: "住宿",
+          },
+        ],
       },
       "9/15": {
-        eyebrow: "9/15 Tokyo",
-        title: "9/15 行程待補",
-        description: "這天還沒有填入景點。新增資料後，日期切換會自動顯示當日時間軸與路線。",
-        stops: [],
+        eyebrow: "9/15 Shizuoka · Atami",
+        title: "熱海商店街與花火大會",
+        description: "熱海銀座商店街、浴衣體驗與靜岡伊豆熱海花火大會，晚上入住吉田屋 憩。",
+        stops: [
+          {
+            time: "15:00",
+            title: "熱海銀座商店街",
+            tag: "商店街 · 熱海",
+            address: "静岡県熱海市銀座町",
+            mapQuery: "熱海銀座商店街 静岡県熱海市銀座町",
+            note: "熱海市區商店街，適合逛街、吃點心與採買。",
+            stay: "約 60 分鐘",
+          },
+          {
+            time: "16:30",
+            title: "浴衣",
+            tag: "體驗 · 浴衣",
+            address: "熱海駅 周辺",
+            mapQuery: "熱海 浴衣 レンタル",
+            note: "浴衣體驗或換裝時間，店家與地點可再依預約調整。",
+            stay: "約 60 分鐘",
+          },
+          {
+            time: "20:20",
+            title: "靜岡伊豆熱海花火大會",
+            tag: "花火 · 熱海",
+            address: "静岡県熱海市渚町 親水公園",
+            mapQuery: "熱海海上花火大会 親水公園 静岡県熱海市渚町",
+            note: "熱海海上花火大會，建議提早抵達會場周邊卡位。",
+            stay: "約 30 分鐘",
+          },
+          {
+            time: "未定",
+            title: "吉田屋 憩",
+            tag: "住宿",
+            address: "地址待確認",
+            mapQuery: "吉田屋 憩",
+            note: "住宿地點，出發前可確認入住時間與交通。",
+            stay: "住宿",
+          },
+        ],
       },
       "9/16": {
-        eyebrow: "9/16 Tokyo",
-        title: "9/16 行程待補",
-        description: "這天還沒有填入景點。新增資料後，日期切換會自動顯示當日時間軸與路線。",
-        stops: [],
+        eyebrow: "9/16 Japan",
+        title: "9/16 住宿",
+        description: "已加入住宿「吉田屋 憩」。",
+        stops: [
+          {
+            time: "未定",
+            title: "吉田屋 憩",
+            tag: "住宿",
+            address: "地址待確認",
+            mapQuery: "吉田屋 憩",
+            note: "住宿地點，出發前可確認入住時間與交通。",
+            stay: "住宿",
+          },
+        ],
       },
       "9/17": {
         eyebrow: "9/17 Tokyo",
@@ -506,18 +803,18 @@
             title: "豪徳寺",
             tag: "寺院 · 世田谷",
             address: "〒154-0021 東京都世田谷区豪徳寺2丁目24−7",
-            mapQuery: "豪徳寺 東京都世田谷区豪徳寺2丁目24-7",
+            mapQuery: "大谿山 豪徳寺 東京都世田谷区豪徳寺2-24-7",
             note: "以招福貓聞名的世田谷寺院，適合作為早上第一站。",
             stay: "約 60 分鐘",
           },
           {
             time: "10:30",
             title: "原宿駅",
-            tag: "起點 · 山手線",
+            tag: "山手線",
             address: "〒150-0001 東京都渋谷区神宮前1丁目 原宿駅",
             mapQuery: "JR 原宿駅 山手線 東京都渋谷区神宮前1丁目",
             note: "從車站出來後，往神宮前與東急プラザ方向移動。",
-            stay: "出發",
+            stay: "車站",
           },
           {
             time: "10:45",
@@ -526,7 +823,7 @@
             address: "〒150-0001 東京都渋谷区神宮前1丁目11−6 ラフォーレ原宿 1.5F",
             mapQuery: "eyecon ラフォーレ原宿 1.5F",
             note: "先逛眼鏡與配件，位置在ラフォーレ原宿，適合作為第一站。",
-            stay: "約 35 分鐘",
+            stay: "約 30 分鐘",
           },
           {
             time: "11:30",
@@ -535,7 +832,7 @@
             address: "1 Chome-14-27 Jingumae, Shibuya, Tokyo 150-0001 日本",
             mapQuery: "@cosme TOKYO 東京都渋谷区神宮前1丁目14-27",
             note: "大型美妝店，建議把想買品牌先列好，現場會省很多時間。",
-            stay: "約 60 分鐘",
+            stay: "約 30 分鐘",
           },
           {
             time: "12:45",
@@ -544,7 +841,7 @@
             address: "6 Chome-1-9 Jingumae, Shibuya, Tokyo 150-0001 日本",
             mapQuery: "キデイランド原宿店 6-1-9 Jingumae Shibuya",
             note: "角色商品與伴手禮選擇多，適合放在最後慢慢挑。",
-            stay: "約 45 分鐘",
+            stay: "約 30 分鐘",
           },
         ],
       },
@@ -576,19 +873,10 @@
 
     let selectedDate = getInitialDate();
     let draggedStopIndex = null;
+    let draggedSourceDate = null;
 
     function mapsSearchUrl(address) {
       return "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(address);
-    }
-
-    function segmentUrl(index) {
-      const stops = itineraries[selectedDate].stops;
-      const from = stops[index].mapQuery;
-      const to = stops[index + 1].mapQuery;
-      return "https://www.google.com/maps/dir/?api=1"
-        + "&origin=" + encodeURIComponent(from)
-        + "&destination=" + encodeURIComponent(to)
-        + "&travelmode=walking";
     }
 
     function fullRouteUrl(stops) {
@@ -626,17 +914,17 @@
       return String(hour).padStart(2, "0") + ":" + String(minute).padStart(2, "0");
     }
 
-    function showToast() {
-      const toast = document.getElementById("toast");
-      toast.classList.add("show");
-      window.setTimeout(() => toast.classList.remove("show"), 1400);
-    }
-
     const timeline = document.getElementById("timeline");
     const dateTabs = document.getElementById("dateTabs");
     const routeList = document.getElementById("routeList");
+    const lodgingList = document.getElementById("lodgingList");
     const reminderList = document.getElementById("reminderList");
     const fullRoute = document.getElementById("fullRoute");
+    const memoModal = document.getElementById("memoModal");
+    const memoTextarea = document.getElementById("memoTextarea");
+    const memoSave = document.getElementById("memoSave");
+    const memoCancel = document.getElementById("memoCancel");
+    let activeMemoIndex = null;
 
     function renderDateTabs() {
       dateTabs.innerHTML = "";
@@ -645,6 +933,7 @@
         button.className = "date-tab" + (date === selectedDate ? " active" : "");
         button.type = "button";
         button.textContent = date;
+        button.dataset.date = date;
         button.setAttribute("aria-pressed", date === selectedDate ? "true" : "false");
         button.addEventListener("click", () => {
           selectedDate = date;
@@ -670,7 +959,89 @@
           <span><b>${stop.title}</b><br>${stop.note}</span>
         `;
         routeList.appendChild(item);
+        if (index < stops.length - 1) {
+          const arrow = document.createElement("li");
+          arrow.className = "route-arrow";
+          arrow.setAttribute("aria-hidden", "true");
+          routeList.appendChild(arrow);
+        }
       });
+    }
+
+    function isLodging(stop) {
+      return stop.tag.includes("住宿") || stop.stay.includes("住宿");
+    }
+
+    function renderLodging(stops) {
+      lodgingList.innerHTML = "";
+      const lodgingStops = stops.filter(isLodging);
+
+      if (!lodgingStops.length) {
+        lodgingList.innerHTML = "<li>本日尚未設定住宿。</li>";
+        return;
+      }
+
+      lodgingStops.forEach((stop) => {
+        const item = document.createElement("li");
+        item.innerHTML = `
+          <b>${stop.title}</b>
+          <div class="lodging-address">${stop.address}</div>
+        `;
+        lodgingList.appendChild(item);
+      });
+    }
+
+    function escapeHtml(value) {
+      return value
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+
+    const badgeStyles = {
+      "住宿": "color:#167c80;background:rgba(22,124,128,0.12);",
+      "三島": "color:#2867a5;background:rgba(40,103,165,0.12);",
+      "熱海": "color:#b77716;background:rgba(183,119,22,0.14);",
+      "世田谷": "color:#8057a8;background:rgba(128,87,168,0.13);",
+      "商店街": "color:#9e263d;background:rgba(204,63,85,0.1);",
+      "體驗": "color:#7a5a14;background:rgba(183,119,22,0.12);",
+      "浴衣": "color:#167c80;background:rgba(22,124,128,0.1);",
+      "花火": "color:#b12d4a;background:rgba(204,63,85,0.12);",
+      "寺院": "color:#8057a8;background:rgba(128,87,168,0.13);",
+      "山手線": "color:#2b7a52;background:rgba(43,122,82,0.12);",
+      "太陽眼鏡": "color:#9e263d;background:rgba(204,63,85,0.1);",
+      "美妝": "color:#b12d4a;background:rgba(204,63,85,0.11);",
+      "玩具店": "color:#2867a5;background:rgba(40,103,165,0.12);",
+      "車站": "color:#2b7a52;background:rgba(43,122,82,0.12);",
+    };
+
+    function badgeStyle(label) {
+      return badgeStyles[label] || "color:#5f6976;background:rgba(95,105,118,0.1);";
+    }
+
+    function isAreaLabel(label) {
+      return ["三島", "熱海", "世田谷", "原宿"].includes(label);
+    }
+
+    function renderStopBadges(stop) {
+      const badges = [];
+      const seen = new Set();
+      const tagParts = stop.tag.split("·").map((part) => part.trim()).filter(Boolean);
+
+      tagParts.forEach((part, index) => {
+        if (seen.has(part)) return;
+        seen.add(part);
+        const className = part.includes("住宿") ? "lodging-tag" : isAreaLabel(part) || index === 1 ? "area-tag" : "tag";
+        badges.push(`<span class="${className}" style="${badgeStyle(part)}">${escapeHtml(part)}</span>`);
+      });
+
+      if (stop.stay && !seen.has(stop.stay)) {
+        const className = stop.stay.includes("住宿") ? "lodging-tag" : "stay-tag";
+        badges.push(`<span class="${className}" style="${badgeStyle(stop.stay)}">${escapeHtml(stop.stay)}</span>`);
+      }
+
+      return badges.join("");
     }
 
     function parseTimeToMinutes(time) {
@@ -724,6 +1095,37 @@
       });
     }
 
+    function stopArea(stop) {
+      return stop.tag
+        .split("·")
+        .map((part) => part.trim())
+        .find((part) => isAreaLabel(part));
+    }
+
+    function heroFromStops(itinerary, stops) {
+      if (!stops.length) {
+        return {
+          eyebrow: itinerary.eyebrow,
+          title: itinerary.title,
+          description: itinerary.description,
+        };
+      }
+
+      const areas = [...new Set(stops.map(stopArea).filter(Boolean))];
+      const nonLodgingStops = stops.filter((stop) => !isLodging(stop));
+      const lodgingStops = stops.filter(isLodging);
+      const visibleStops = nonLodgingStops.length ? nonLodgingStops : lodgingStops;
+      const titleStops = visibleStops.slice(0, 3).map((stop) => stop.title);
+      const title = titleStops.join("、") + (visibleStops.length > 3 ? " 等行程" : "");
+      const descriptionStops = stops.map((stop) => stop.title).join("、");
+
+      return {
+        eyebrow: areas.length ? `${selectedDate} ${areas.join(" · ")}` : itinerary.eyebrow,
+        title: title || itinerary.title,
+        description: `今日行程：${descriptionStops}。`,
+      };
+    }
+
     function renderTimeline(stops) {
       timeline.innerHTML = "";
       if (!stops.length) {
@@ -732,33 +1134,75 @@
       }
 
       stops.forEach((stop, index) => {
+        const block = document.createElement("div");
+        block.className = "stop-block";
+
         const article = document.createElement("article");
-        article.className = "stop";
-        article.draggable = true;
+        article.className = "stop-card";
         article.dataset.index = index;
         article.innerHTML = `
+          <button class="drag-button" type="button" draggable="true" aria-label="拖曳調整 ${stop.title} 順序" title="拖曳調整順序">
+            <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <circle cx="9" cy="6" r="1"></circle>
+              <circle cx="15" cy="6" r="1"></circle>
+              <circle cx="9" cy="12" r="1"></circle>
+              <circle cx="15" cy="12" r="1"></circle>
+              <circle cx="9" cy="18" r="1"></circle>
+              <circle cx="15" cy="18" r="1"></circle>
+            </svg>
+          </button>
           <div class="time">
             <input class="time-input" type="text" value="${stop.time}" data-time-index="${index}" aria-label="${stop.title} 時間" placeholder="09:00">
           </div>
           <div>
             <h3>${stop.title}</h3>
-            <span class="tag">${stop.tag} · ${stop.stay}</span>
+            <div class="meta-row">
+              ${renderStopBadges(stop)}
+            </div>
+            ${stop.memo ? `<div class="memo-display">${escapeHtml(stop.memo)}</div>` : ""}
             <p class="address">${stop.address}</p>
             <p class="note">${stop.note}</p>
-            <div class="stop-actions">
-              <a class="small-button" href="${mapsSearchUrl(stop.mapQuery)}" target="_blank" rel="noreferrer">Google Maps</a>
-              ${index < stops.length - 1 ? `<a class="small-button" href="${segmentUrl(index)}" target="_blank" rel="noreferrer">到下一站</a>` : ""}
-              <button class="small-button" type="button" data-copy="${stop.address}">複製地址</button>
+          <div class="stop-actions">
+            <a class="small-button" href="${mapsSearchUrl(stop.mapQuery)}" target="_blank" rel="noreferrer">Google Maps</a>
+            <button class="small-button" type="button" data-memo-button="${index}">備註</button>
             </div>
           </div>
         `;
-        timeline.appendChild(article);
+        block.appendChild(article);
+
+        timeline.appendChild(block);
       });
     }
 
-    function saveStopOrder() {
-      const order = itineraries[selectedDate].stops.map((stop) => stop.title);
-      window.localStorage.setItem("travelStopOrder-" + selectedDate, JSON.stringify(order));
+    function saveStopOrder(date = selectedDate) {
+      const order = itineraries[date].stops.map((stop) => stop.title);
+      window.localStorage.setItem("travelStopOrder-" + date, JSON.stringify(order));
+    }
+
+    function saveItineraries() {
+      const savedStops = dates.reduce((result, date) => {
+        result[date] = itineraries[date].stops;
+        return result;
+      }, {});
+      window.localStorage.setItem("travelItineraryStops", JSON.stringify(savedStops));
+    }
+
+    function loadItineraries() {
+      const savedStops = window.localStorage.getItem("travelItineraryStops");
+      if (!savedStops) return false;
+
+      try {
+        const parsedStops = JSON.parse(savedStops);
+        dates.forEach((date) => {
+          if (Array.isArray(parsedStops[date])) {
+            itineraries[date].stops = parsedStops[date];
+          }
+        });
+        return true;
+      } catch {
+        window.localStorage.removeItem("travelItineraryStops");
+        return false;
+      }
     }
 
     function saveStopTimes(date = selectedDate) {
@@ -817,34 +1261,40 @@
     function renderPage() {
       const itinerary = itineraries[selectedDate];
       const stops = itinerary.stops;
+      const hero = heroFromStops(itinerary, stops);
 
-      document.getElementById("heroEyebrow").textContent = itinerary.eyebrow;
-      document.getElementById("heroTitle").textContent = itinerary.title;
-      document.getElementById("heroDescription").textContent = itinerary.description;
+      document.getElementById("heroEyebrow").textContent = hero.eyebrow;
+      document.getElementById("heroTitle").textContent = hero.title;
+      document.getElementById("heroDescription").textContent = hero.description;
+      document.title = `${selectedDate} ${hero.title}`;
       document.getElementById("timeline-title").textContent = selectedDate + " 行程";
-      document.getElementById("routeTitle").textContent = selectedDate + " 路線";
+      document.getElementById("routeTitle").textContent = "路線";
+      document.getElementById("lodgingTitle").textContent = "住宿";
 
       renderDateTabs();
       renderTimeline(stops);
       renderRouteList(stops);
+      renderLodging(stops);
       renderReminders(stops);
       renderActions(stops);
     }
 
     timeline.addEventListener("dragstart", (event) => {
-      const card = event.target.closest(".stop");
-      if (!card) return;
-      if (event.target.closest("input, button, a")) {
+      const handle = event.target.closest(".drag-button");
+      if (!handle) {
         event.preventDefault();
         return;
       }
+      const card = handle.closest(".stop-card");
+      if (!card) return;
       draggedStopIndex = Number(card.dataset.index);
+      draggedSourceDate = selectedDate;
       card.classList.add("dragging");
       event.dataTransfer.effectAllowed = "move";
     });
 
     timeline.addEventListener("dragover", (event) => {
-      const card = event.target.closest(".stop");
+      const card = event.target.closest(".stop-card");
       if (!card || draggedStopIndex === null) return;
       event.preventDefault();
       card.classList.add("drag-over");
@@ -852,12 +1302,12 @@
     });
 
     timeline.addEventListener("dragleave", (event) => {
-      const card = event.target.closest(".stop");
+      const card = event.target.closest(".stop-card");
       if (card) card.classList.remove("drag-over");
     });
 
     timeline.addEventListener("drop", (event) => {
-      const card = event.target.closest(".stop");
+      const card = event.target.closest(".stop-card");
       if (!card || draggedStopIndex === null) return;
       event.preventDefault();
 
@@ -866,15 +1316,62 @@
       const [movedStop] = stops.splice(draggedStopIndex, 1);
       stops.splice(targetIndex, 0, movedStop);
       draggedStopIndex = null;
+      draggedSourceDate = null;
       saveStopOrder();
+      saveStopTimes();
+      saveItineraries();
       renderPage();
     });
 
     timeline.addEventListener("dragend", () => {
       draggedStopIndex = null;
-      document.querySelectorAll(".stop").forEach((card) => {
+      draggedSourceDate = null;
+      document.querySelectorAll(".stop-card").forEach((card) => {
         card.classList.remove("dragging", "drag-over");
       });
+      document.querySelectorAll(".date-tab").forEach((button) => {
+        button.classList.remove("drop-target");
+      });
+    });
+
+    dateTabs.addEventListener("dragover", (event) => {
+      const button = event.target.closest(".date-tab");
+      if (!button || draggedStopIndex === null) return;
+      event.preventDefault();
+      button.classList.add("drop-target");
+      event.dataTransfer.dropEffect = "move";
+    });
+
+    dateTabs.addEventListener("dragleave", (event) => {
+      const button = event.target.closest(".date-tab");
+      if (button) button.classList.remove("drop-target");
+    });
+
+    dateTabs.addEventListener("drop", (event) => {
+      const button = event.target.closest(".date-tab");
+      if (!button || draggedStopIndex === null || !draggedSourceDate) return;
+      event.preventDefault();
+
+      const targetDate = button.dataset.date;
+      const sourceStops = itineraries[draggedSourceDate].stops;
+      const targetStops = itineraries[targetDate].stops;
+      const [movedStop] = sourceStops.splice(draggedStopIndex, 1);
+      if (movedStop) {
+        targetStops.push(movedStop);
+      }
+
+      saveStopOrder(draggedSourceDate);
+      saveStopTimes(draggedSourceDate);
+      saveStopOrder(targetDate);
+      saveStopTimes(targetDate);
+      saveItineraries();
+
+      selectedDate = targetDate;
+      window.localStorage.setItem("selectedTravelDate", selectedDate);
+      window.history.replaceState(null, "", "#" + dateToHash(selectedDate));
+      draggedStopIndex = null;
+      draggedSourceDate = null;
+      renderPage();
     });
 
     timeline.addEventListener("change", (event) => {
@@ -885,35 +1382,51 @@
       stop.time = formatTime(input.value);
       input.value = stop.time;
       saveStopTimes();
+      saveItineraries();
       renderReminders(itineraries[selectedDate].stops);
+    });
+
+    timeline.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-memo-button]");
+      if (!button) return;
+
+      activeMemoIndex = Number(button.dataset.memoButton);
+      const stop = itineraries[selectedDate].stops[activeMemoIndex];
+      memoTextarea.value = stop.memo || "";
+      memoModal.classList.add("open");
+      memoTextarea.focus();
+    });
+
+    function closeMemoModal() {
+      memoModal.classList.remove("open");
+      activeMemoIndex = null;
+    }
+
+    memoSave.addEventListener("click", () => {
+      if (activeMemoIndex === null) return;
+      const stop = itineraries[selectedDate].stops[activeMemoIndex];
+      stop.memo = memoTextarea.value.trim();
+      saveItineraries();
+      closeMemoModal();
+      renderPage();
+    });
+
+    memoCancel.addEventListener("click", closeMemoModal);
+
+    memoModal.addEventListener("click", (event) => {
+      if (event.target === memoModal) closeMemoModal();
     });
 
     if (window.location.hash !== "#" + dateToHash(selectedDate)) {
       window.history.replaceState(null, "", "#" + dateToHash(selectedDate));
     }
 
-    dates.forEach((date) => {
-      loadStopOrder(date);
-      loadStopTimes(date);
-    });
+    if (!loadItineraries()) {
+      dates.forEach(loadStopOrder);
+    }
+    dates.forEach(loadStopTimes);
     renderPage();
 
-    document.addEventListener("click", async (event) => {
-      const button = event.target.closest("[data-copy]");
-      if (!button) return;
-      const text = button.getAttribute("data-copy");
-      try {
-        await navigator.clipboard.writeText(text);
-      } catch {
-        const input = document.createElement("textarea");
-        input.value = text;
-        document.body.appendChild(input);
-        input.select();
-        document.execCommand("copy");
-        input.remove();
-      }
-      showToast();
-    });
   </script>
 </body>
 </html>
