@@ -221,6 +221,7 @@
       background: rgba(255, 255, 255, 0.92);
       color: var(--muted);
       cursor: grab;
+      touch-action: none;
       box-shadow: 0 6px 16px rgba(31, 36, 43, 0.08);
     }
 
@@ -572,7 +573,13 @@
       }
 
       .date-tabs {
-        gap: 6px 14px;
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 8px 12px;
+      }
+
+      .date-tab {
+        justify-self: center;
       }
     }
 
@@ -604,13 +611,7 @@
       }
 
       .date-tabs {
-        display: grid;
-        grid-template-columns: repeat(4, minmax(0, 1fr));
         gap: 8px 12px;
-      }
-
-      .date-tab {
-        justify-self: center;
       }
     }
   </style>
@@ -676,6 +677,15 @@
         title: "9/12 住宿",
         description: "三島站周邊住宿日，已加入東橫INN 富士山三島站。",
         stops: [
+          {
+            time: "未定",
+            title: "臺北松山機場",
+            tag: "機場 · 台北",
+            address: "台北市松山區敦化北路340-9號",
+            mapQuery: "臺北松山機場 台北市松山區敦化北路340-9號",
+            note: "出發機場，建議確認航空公司櫃台與報到時間。",
+            stay: "航廈",
+          },
           {
             time: "未定",
             title: "羽田機場第三航廈",
@@ -846,10 +856,29 @@
         ],
       },
       "9/19": {
-        eyebrow: "9/19 Tokyo",
-        title: "9/19 行程待補",
-        description: "這天還沒有填入景點。新增資料後，日期切換會自動顯示當日時間軸與路線。",
-        stops: [],
+        eyebrow: "9/19 Narita · Taoyuan",
+        title: "返程機場行程",
+        description: "從成田國際機場第二航廈出發，抵達臺灣桃園國際機場。",
+        stops: [
+          {
+            time: "未定",
+            title: "成田國際機場第二航廈",
+            tag: "機場 · 成田",
+            address: "千葉県成田市古込1-1 成田国際空港 第2ターミナル",
+            mapQuery: "成田国際空港 第2ターミナル 千葉県成田市古込1-1",
+            note: "返程出發航廈，建議確認航空公司櫃台與登機時間。",
+            stay: "航廈",
+          },
+          {
+            time: "未定",
+            title: "臺灣桃園國際機場",
+            tag: "機場 · 桃園",
+            address: "桃園市大園區航站南路9號",
+            mapQuery: "臺灣桃園國際機場 桃園市大園區航站南路9號",
+            note: "抵達臺灣後的入境與行李提領地點。",
+            stay: "航廈",
+          },
+        ],
       },
     };
 
@@ -874,6 +903,7 @@
     let selectedDate = getInitialDate();
     let draggedStopIndex = null;
     let draggedSourceDate = null;
+    let touchDragActive = false;
 
     function mapsSearchUrl(address) {
       return "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(address);
@@ -1279,6 +1309,54 @@
       renderActions(stops);
     }
 
+    function clearDragHighlights() {
+      document.querySelectorAll(".stop-card").forEach((card) => {
+        card.classList.remove("dragging", "drag-over");
+      });
+      document.querySelectorAll(".date-tab").forEach((button) => {
+        button.classList.remove("drop-target");
+      });
+    }
+
+    function moveStopWithinDate(targetIndex) {
+      if (draggedStopIndex === null) return;
+      const stops = itineraries[selectedDate].stops;
+      const [movedStop] = stops.splice(draggedStopIndex, 1);
+      if (!movedStop) return;
+      stops.splice(targetIndex, 0, movedStop);
+      saveStopOrder();
+      saveStopTimes();
+      saveItineraries();
+      draggedStopIndex = null;
+      draggedSourceDate = null;
+      clearDragHighlights();
+      renderPage();
+    }
+
+    function moveStopToDate(targetDate) {
+      if (draggedStopIndex === null || !draggedSourceDate) return;
+      const sourceStops = itineraries[draggedSourceDate].stops;
+      const targetStops = itineraries[targetDate].stops;
+      const [movedStop] = sourceStops.splice(draggedStopIndex, 1);
+      if (movedStop) {
+        targetStops.push(movedStop);
+      }
+
+      saveStopOrder(draggedSourceDate);
+      saveStopTimes(draggedSourceDate);
+      saveStopOrder(targetDate);
+      saveStopTimes(targetDate);
+      saveItineraries();
+
+      selectedDate = targetDate;
+      window.localStorage.setItem("selectedTravelDate", selectedDate);
+      window.history.replaceState(null, "", "#" + dateToHash(selectedDate));
+      draggedStopIndex = null;
+      draggedSourceDate = null;
+      clearDragHighlights();
+      renderPage();
+    }
+
     timeline.addEventListener("dragstart", (event) => {
       const handle = event.target.closest(".drag-button");
       if (!handle) {
@@ -1312,26 +1390,13 @@
       event.preventDefault();
 
       const targetIndex = Number(card.dataset.index);
-      const stops = itineraries[selectedDate].stops;
-      const [movedStop] = stops.splice(draggedStopIndex, 1);
-      stops.splice(targetIndex, 0, movedStop);
-      draggedStopIndex = null;
-      draggedSourceDate = null;
-      saveStopOrder();
-      saveStopTimes();
-      saveItineraries();
-      renderPage();
+      moveStopWithinDate(targetIndex);
     });
 
     timeline.addEventListener("dragend", () => {
       draggedStopIndex = null;
       draggedSourceDate = null;
-      document.querySelectorAll(".stop-card").forEach((card) => {
-        card.classList.remove("dragging", "drag-over");
-      });
-      document.querySelectorAll(".date-tab").forEach((button) => {
-        button.classList.remove("drop-target");
-      });
+      clearDragHighlights();
     });
 
     dateTabs.addEventListener("dragover", (event) => {
@@ -1352,26 +1417,63 @@
       if (!button || draggedStopIndex === null || !draggedSourceDate) return;
       event.preventDefault();
 
-      const targetDate = button.dataset.date;
-      const sourceStops = itineraries[draggedSourceDate].stops;
-      const targetStops = itineraries[targetDate].stops;
-      const [movedStop] = sourceStops.splice(draggedStopIndex, 1);
-      if (movedStop) {
-        targetStops.push(movedStop);
+      moveStopToDate(button.dataset.date);
+    });
+
+    timeline.addEventListener("touchstart", (event) => {
+      const handle = event.target.closest(".drag-button");
+      if (!handle) return;
+      const card = handle.closest(".stop-card");
+      if (!card) return;
+
+      touchDragActive = true;
+      draggedStopIndex = Number(card.dataset.index);
+      draggedSourceDate = selectedDate;
+      card.classList.add("dragging");
+      event.preventDefault();
+    }, { passive: false });
+
+    timeline.addEventListener("touchmove", (event) => {
+      if (!touchDragActive || draggedStopIndex === null) return;
+      const touch = event.touches[0];
+      if (!touch) return;
+      event.preventDefault();
+
+      clearDragHighlights();
+      const target = document.elementFromPoint(touch.clientX, touch.clientY);
+      const dateButton = target?.closest?.(".date-tab");
+      const card = target?.closest?.(".stop-card");
+      if (dateButton) {
+        dateButton.classList.add("drop-target");
+      } else if (card) {
+        card.classList.add("drag-over");
+      }
+    }, { passive: false });
+
+    timeline.addEventListener("touchend", (event) => {
+      if (!touchDragActive || draggedStopIndex === null) return;
+      const touch = event.changedTouches[0];
+      touchDragActive = false;
+      if (!touch) {
+        draggedStopIndex = null;
+        draggedSourceDate = null;
+        clearDragHighlights();
+        return;
       }
 
-      saveStopOrder(draggedSourceDate);
-      saveStopTimes(draggedSourceDate);
-      saveStopOrder(targetDate);
-      saveStopTimes(targetDate);
-      saveItineraries();
+      const target = document.elementFromPoint(touch.clientX, touch.clientY);
+      const dateButton = target?.closest?.(".date-tab");
+      const card = target?.closest?.(".stop-card");
 
-      selectedDate = targetDate;
-      window.localStorage.setItem("selectedTravelDate", selectedDate);
-      window.history.replaceState(null, "", "#" + dateToHash(selectedDate));
-      draggedStopIndex = null;
-      draggedSourceDate = null;
-      renderPage();
+      if (dateButton) {
+        moveStopToDate(dateButton.dataset.date);
+      } else if (card) {
+        moveStopWithinDate(Number(card.dataset.index));
+      } else {
+        draggedStopIndex = null;
+        draggedSourceDate = null;
+        clearDragHighlights();
+      }
     });
 
     timeline.addEventListener("change", (event) => {
