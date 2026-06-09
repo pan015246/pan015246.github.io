@@ -752,7 +752,7 @@
   <header class="hero">
     <div class="hero-inner">
       <p class="eyebrow" id="heroEyebrow">9/12-9/19 Tokyo</p>
-      <h1 id="heroTitle">東京旅行行程</h1>
+      <h1 id="heroTitle">【日本關東自由行】東京・富士山・熱海 8 天 7 夜行程規劃</h1>
       <p id="heroDescription">點選日期查看當日行程。已安排的日期會顯示時間軸、路線順序與 Google Maps 導航。</p>
     </div>
   </header>
@@ -1343,12 +1343,11 @@
       const lodgingStops = stops.filter(isLodging);
       const visibleStops = nonLodgingStops.length ? nonLodgingStops : lodgingStops;
       const titleStops = visibleStops.slice(0, 3).map((stop) => stop.title);
-      const title = titleStops.join("、") + (visibleStops.length > 3 ? " 等行程" : "");
       const descriptionStops = stops.map((stop) => stop.title).join("、");
 
       return {
         eyebrow: areas.length ? `${selectedDate} ${areas.join(" · ")}` : itinerary.eyebrow,
-        title: title || itinerary.title,
+        title: "【日本關東自由行】東京・富士山・熱海 8 天 7 夜行程規劃",
         description: `今日行程：${descriptionStops}。`,
       };
     }
@@ -1562,7 +1561,7 @@
       const hasRoute = stops.length > 1;
 
       fullRoute.href = hasRoute ? fullRouteUrl(stops) : "#";
-      fullRoute.textContent = hasRoute && stops.length > 2 ? "開啟 Google Maps 完整路線參考" : "開啟 Google Maps 完整路線";
+      fullRoute.textContent = hasRoute ? "完整路線參考" : "完整路線參考";
       fullRoute.setAttribute("aria-disabled", hasRoute ? "false" : "true");
       fullRoute.style.pointerEvents = hasRoute ? "" : "none";
       fullRoute.style.opacity = hasRoute ? "1" : "0.48";
@@ -1576,7 +1575,7 @@
       document.getElementById("heroEyebrow").textContent = hero.eyebrow;
       document.getElementById("heroTitle").textContent = hero.title;
       document.getElementById("heroDescription").textContent = hero.description;
-      document.title = `${selectedDate} ${hero.title}`;
+      document.title = hero.title;
       document.getElementById("timeline-title").textContent = selectedDate + " 行程";
       document.getElementById("routeTitle").textContent = "路線";
       document.getElementById("lodgingTitle").textContent = "住宿";
