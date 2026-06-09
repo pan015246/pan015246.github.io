@@ -38,13 +38,13 @@
     }
 
     .hero {
-      min-height: 48vh;
+      min-height: 34vh;
       display: grid;
       align-items: end;
-      padding: 42px 0 30px;
+      padding: 34px 0 24px;
       background:
         linear-gradient(180deg, rgba(18, 23, 28, 0.18), rgba(18, 23, 28, 0.66)),
-        url("https://images.unsplash.com/photo-1542051841857-5f90071e7989?auto=format&fit=crop&w=1800&q=80") center 44% / cover;
+        url("https://images.unsplash.com/photo-1542051841857-5f90071e7989?auto=format&fit=crop&w=1800&q=80") center 46% / cover;
       color: white;
     }
 
@@ -66,17 +66,17 @@
 
     h1 {
       margin: 0;
-      font-size: clamp(2.2rem, 6vw, 5rem);
-      line-height: 1.02;
+      font-size: clamp(2rem, 4.6vw, 3.9rem);
+      line-height: 1.08;
       letter-spacing: 0;
       max-width: 920px;
     }
 
     .hero p {
       max-width: 700px;
-      margin: 18px 0 0;
-      font-size: 1.08rem;
-      line-height: 1.8;
+      margin: 12px 0 0;
+      font-size: 1rem;
+      line-height: 1.65;
       color: rgba(255, 255, 255, 0.9);
     }
 
@@ -157,9 +157,17 @@
 
     .layout {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) 340px;
+      grid-template-columns: 340px minmax(0, 1fr);
       gap: 22px;
       align-items: start;
+    }
+
+    .layout > section {
+      order: 2;
+    }
+
+    .layout > aside {
+      order: 1;
     }
 
     .section-title {
@@ -218,11 +226,11 @@
       height: 34px;
       border: 1px solid rgba(32, 36, 42, 0.12);
       border-radius: 8px;
-      background: rgba(255, 255, 255, 0.92);
+      background: rgba(248, 250, 249, 0.9);
       color: var(--muted);
       cursor: grab;
       touch-action: none;
-      box-shadow: 0 6px 16px rgba(31, 36, 43, 0.08);
+      box-shadow: none;
     }
 
     .drag-button:hover {
@@ -420,6 +428,12 @@
       margin-top: 10px;
     }
 
+    .mobile-move-controls {
+      display: none;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
     .small-button {
       display: inline-flex;
       align-items: center;
@@ -440,11 +454,28 @@
       border-color: rgba(204, 63, 85, 0.45);
     }
 
+    .small-button:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
     aside {
       position: sticky;
       top: 18px;
       display: grid;
       gap: 14px;
+    }
+
+    .lodging-panel {
+      order: 1;
+    }
+
+    .reminder-panel {
+      order: 2;
+    }
+
+    .route-panel {
+      order: 3;
     }
 
     .info-panel {
@@ -578,11 +609,19 @@
 
     @media (max-width: 860px) {
       .hero {
-        min-height: 42vh;
+        min-height: 30vh;
       }
 
       .layout {
         grid-template-columns: 1fr;
+      }
+
+      .layout > section {
+        order: 1;
+      }
+
+      .layout > aside {
+        order: 2;
       }
 
       aside {
@@ -618,33 +657,52 @@
       }
 
       h1 {
-        font-size: clamp(2rem, 12vw, 3.3rem);
+        font-size: clamp(1.8rem, 10vw, 2.8rem);
       }
 
       .stop-card {
         grid-template-columns: 1fr;
-        padding: 16px 54px 16px 16px;
+        padding: 54px 16px 16px;
       }
 
       .drag-button {
         top: 12px;
-        right: 12px;
-        width: 36px;
-        height: 36px;
+        right: 14px;
+        width: 34px;
+        height: 34px;
+        background: transparent;
+        border-color: rgba(32, 36, 42, 0.1);
       }
 
       .time {
-        width: auto;
+        display: flex;
+        width: 100%;
         height: auto;
-        min-height: 38px;
+        min-height: 52px;
+        padding: 8px 10px;
         border-radius: 8px;
-        grid-template-columns: auto minmax(90px, 120px);
-        justify-content: start;
+        justify-content: flex-start;
+        align-items: center;
+      }
+
+      .time-input {
+        width: 86px;
+        min-height: 36px;
       }
 
       .button,
       .small-button {
         width: 100%;
+      }
+
+      .stop-actions .small-button,
+      .mobile-move-controls .small-button {
+        width: auto;
+        flex: 1 1 0;
+      }
+
+      .mobile-move-controls {
+        display: flex;
       }
 
       .date-tabs {
@@ -1271,6 +1329,10 @@
             <a class="small-button" href="${mapsSearchUrl(stop.mapQuery)}" target="_blank" rel="noreferrer">Google Maps</a>
             <button class="small-button" type="button" data-memo-button="${index}">備註</button>
             </div>
+            <div class="mobile-move-controls" aria-label="手機排序控制">
+              <button class="small-button" type="button" data-mobile-move="up" data-mobile-index="${index}" ${index === 0 ? "disabled" : ""}>上移</button>
+              <button class="small-button" type="button" data-mobile-move="down" data-mobile-index="${index}" ${index === stops.length - 1 ? "disabled" : ""}>下移</button>
+            </div>
           </div>
         `;
         block.appendChild(article);
@@ -1628,6 +1690,22 @@
     });
 
     timeline.addEventListener("click", (event) => {
+      const moveButton = event.target.closest("[data-mobile-move]");
+      if (moveButton) {
+        const index = Number(moveButton.dataset.mobileIndex);
+        const direction = moveButton.dataset.mobileMove;
+        const stops = itineraries[selectedDate].stops;
+        const targetIndex = direction === "up" ? index - 1 : index + 1;
+        if (targetIndex < 0 || targetIndex >= stops.length) return;
+        const [movedStop] = stops.splice(index, 1);
+        stops.splice(targetIndex, 0, movedStop);
+        saveStopOrder();
+        saveStopTimes();
+        saveItineraries();
+        renderPage();
+        return;
+      }
+
       const button = event.target.closest("[data-memo-button]");
       if (!button) return;
 
