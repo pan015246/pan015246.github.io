@@ -182,9 +182,9 @@
     .stop-card {
       position: relative;
       display: grid;
-      grid-template-columns: 96px minmax(0, 1fr);
-      gap: 18px;
-      padding: 20px;
+      grid-template-columns: 82px minmax(0, 1fr);
+      gap: 14px;
+      padding: 16px 56px 16px 16px;
       border: 1px solid rgba(32, 36, 42, 0.1);
       border-radius: 8px;
       background: rgba(255, 255, 255, 0.92);
@@ -210,8 +210,8 @@
 
     .drag-button {
       position: absolute;
-      top: 14px;
-      right: 14px;
+      top: 12px;
+      right: 12px;
       display: grid;
       place-items: center;
       width: 34px;
@@ -253,9 +253,9 @@
       display: grid;
       gap: 7px;
       place-items: center;
-      width: 82px;
-      min-height: 82px;
-      padding: 10px 8px;
+      width: 70px;
+      min-height: 70px;
+      padding: 8px 7px;
       border-radius: 8px;
       background: #f0f7f7;
       color: var(--teal);
@@ -265,8 +265,8 @@
     }
 
     .time-input {
-      width: 66px;
-      min-height: 34px;
+      width: 58px;
+      min-height: 31px;
       border: 1px solid rgba(22, 124, 128, 0.18);
       border-radius: 8px;
       background: rgba(255, 255, 255, 0.78);
@@ -283,8 +283,8 @@
     }
 
     .stop h3 {
-      margin: 0 0 7px;
-      font-size: 1.22rem;
+      margin: 0 0 6px;
+      font-size: 1.12rem;
       letter-spacing: 0;
     }
 
@@ -340,6 +340,20 @@
       margin: 0;
       color: var(--muted);
       line-height: 1.65;
+    }
+
+    .address b {
+      color: var(--ink);
+    }
+
+    .hours {
+      margin: 7px 0 0;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .hours b {
+      color: var(--ink);
     }
 
     .memo-display {
@@ -403,10 +417,13 @@
       display: flex;
       flex-wrap: wrap;
       gap: 8px;
-      margin-top: 14px;
+      margin-top: 10px;
     }
 
     .small-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
       min-height: 36px;
       padding: 7px 10px;
       border-radius: 8px;
@@ -572,6 +589,18 @@
         position: static;
       }
 
+      .lodging-panel {
+        order: 1;
+      }
+
+      .route-panel {
+        order: 2;
+      }
+
+      .reminder-panel {
+        order: 3;
+      }
+
       .date-tabs {
         display: grid;
         grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -594,6 +623,14 @@
 
       .stop-card {
         grid-template-columns: 1fr;
+        padding: 16px 54px 16px 16px;
+      }
+
+      .drag-button {
+        top: 12px;
+        right: 12px;
+        width: 36px;
+        height: 36px;
       }
 
       .time {
@@ -639,17 +676,17 @@
       </section>
 
       <aside aria-label="路線與地圖">
-        <section class="info-panel">
+        <section class="info-panel route-panel">
           <h2 class="panel-title-route" id="routeTitle">步行路線</h2>
           <ol class="route-list" id="routeList"></ol>
         </section>
 
-        <section class="info-panel">
+        <section class="info-panel lodging-panel">
           <h2 class="panel-title-lodging" id="lodgingTitle">住宿</h2>
           <ul class="lodging-list" id="lodgingList"></ul>
         </section>
 
-        <section class="info-panel">
+        <section class="info-panel reminder-panel">
           <h2 class="panel-title-reminder">出發前提醒</h2>
           <ul class="reminder-list" id="reminderList"></ul>
         </section>
@@ -683,6 +720,7 @@
             tag: "機場 · 台北",
             address: "台北市松山區敦化北路340-9號",
             mapQuery: "臺北松山機場 台北市松山區敦化北路340-9號",
+            hours: "無",
             note: "出發機場，建議確認航空公司櫃台與報到時間。",
             stay: "航廈",
           },
@@ -692,8 +730,29 @@
             tag: "機場 · 羽田",
             address: "東京都大田区羽田空港2丁目6-5",
             mapQuery: "羽田空港 第3ターミナル 東京都大田区羽田空港2丁目6-5",
+            hours: "無",
             note: "抵達或出發航廈，建議確認航空公司櫃台與交通動線。",
             stay: "航廈",
+          },
+          {
+            time: "未定",
+            title: "小網神社",
+            tag: "神社 · 東京",
+            address: "東京都中央区日本橋小網町16-23",
+            mapQuery: "小網神社 東京都中央区日本橋小網町16-23",
+            hours: "授與所 09:00-17:00",
+            note: "東京日本橋附近神社，出發前可確認參拜時間與交通。",
+            stay: "約 30 分鐘",
+          },
+          {
+            time: "未定",
+            title: "東京車站",
+            tag: "車站 · 東京",
+            address: "東京都千代田区丸の内1丁目",
+            mapQuery: "東京駅 東京都千代田区丸の内1丁目",
+            hours: "無",
+            note: "東京主要轉乘車站，可安排搭車或站內採買。",
+            stay: "車站",
           },
           {
             time: "未定",
@@ -701,6 +760,7 @@
             tag: "住宿 · 三島",
             address: "静岡県三島市文教町1-5-7",
             mapQuery: "東横INN富士山三島駅 静岡県三島市文教町1-5-7",
+            hours: "無",
             note: "三島站附近住宿，出發前可確認入住時間與交通。",
             stay: "住宿",
           },
@@ -717,6 +777,7 @@
             tag: "住宿 · 三島",
             address: "静岡県三島市文教町1-5-7",
             mapQuery: "東横INN富士山三島駅 静岡県三島市文教町1-5-7",
+            hours: "無",
             note: "三島站附近住宿，出發前可確認入住時間與交通。",
             stay: "住宿",
           },
@@ -733,6 +794,7 @@
             tag: "住宿 · 三島",
             address: "静岡県三島市文教町1-5-7",
             mapQuery: "東横INN富士山三島駅 静岡県三島市文教町1-5-7",
+            hours: "無",
             note: "三島站附近住宿，出發前可確認入住時間與交通。",
             stay: "住宿",
           },
@@ -749,6 +811,7 @@
             tag: "商店街 · 熱海",
             address: "静岡県熱海市銀座町",
             mapQuery: "熱海銀座商店街 静岡県熱海市銀座町",
+            hours: "店舗により異なる",
             note: "熱海市區商店街，適合逛街、吃點心與採買。",
             stay: "約 60 分鐘",
           },
@@ -758,6 +821,7 @@
             tag: "體驗 · 浴衣",
             address: "熱海駅 周辺",
             mapQuery: "熱海 浴衣 レンタル",
+            hours: "無",
             note: "浴衣體驗或換裝時間，店家與地點可再依預約調整。",
             stay: "約 60 分鐘",
           },
@@ -767,6 +831,7 @@
             tag: "花火 · 熱海",
             address: "静岡県熱海市渚町 親水公園",
             mapQuery: "熱海海上花火大会 親水公園 静岡県熱海市渚町",
+            hours: "活動時間 20:20-20:40",
             note: "熱海海上花火大會，建議提早抵達會場周邊卡位。",
             stay: "約 30 分鐘",
           },
@@ -776,6 +841,7 @@
             tag: "住宿",
             address: "地址待確認",
             mapQuery: "吉田屋 憩",
+            hours: "無",
             note: "住宿地點，出發前可確認入住時間與交通。",
             stay: "住宿",
           },
@@ -792,6 +858,7 @@
             tag: "住宿",
             address: "地址待確認",
             mapQuery: "吉田屋 憩",
+            hours: "無",
             note: "住宿地點，出發前可確認入住時間與交通。",
             stay: "住宿",
           },
@@ -814,6 +881,7 @@
             tag: "寺院 · 世田谷",
             address: "〒154-0021 東京都世田谷区豪徳寺2丁目24−7",
             mapQuery: "大谿山 豪徳寺 東京都世田谷区豪徳寺2-24-7",
+            hours: "06:00-17:00",
             note: "以招福貓聞名的世田谷寺院，適合作為早上第一站。",
             stay: "約 60 分鐘",
           },
@@ -823,6 +891,7 @@
             tag: "山手線",
             address: "〒150-0001 東京都渋谷区神宮前1丁目 原宿駅",
             mapQuery: "JR 原宿駅 山手線 東京都渋谷区神宮前1丁目",
+            hours: "無",
             note: "從車站出來後，往神宮前與東急プラザ方向移動。",
             stay: "車站",
           },
@@ -832,6 +901,7 @@
             tag: "太陽眼鏡",
             address: "〒150-0001 東京都渋谷区神宮前1丁目11−6 ラフォーレ原宿 1.5F",
             mapQuery: "eyecon ラフォーレ原宿 1.5F",
+            hours: "11:00-20:00",
             note: "先逛眼鏡與配件，位置在ラフォーレ原宿，適合作為第一站。",
             stay: "約 30 分鐘",
           },
@@ -841,6 +911,7 @@
             tag: "美妝",
             address: "1 Chome-14-27 Jingumae, Shibuya, Tokyo 150-0001 日本",
             mapQuery: "@cosme TOKYO 東京都渋谷区神宮前1丁目14-27",
+            hours: "11:00-21:00",
             note: "大型美妝店，建議把想買品牌先列好，現場會省很多時間。",
             stay: "約 30 分鐘",
           },
@@ -850,6 +921,7 @@
             tag: "玩具店",
             address: "6 Chome-1-9 Jingumae, Shibuya, Tokyo 150-0001 日本",
             mapQuery: "キデイランド原宿店 6-1-9 Jingumae Shibuya",
+            hours: "平日 11:00-21:00／土日祝 10:30-21:00",
             note: "角色商品與伴手禮選擇多，適合放在最後慢慢挑。",
             stay: "約 30 分鐘",
           },
@@ -866,6 +938,7 @@
             tag: "機場 · 成田",
             address: "千葉県成田市古込1-1 成田国際空港 第2ターミナル",
             mapQuery: "成田国際空港 第2ターミナル 千葉県成田市古込1-1",
+            hours: "無",
             note: "返程出發航廈，建議確認航空公司櫃台與登機時間。",
             stay: "航廈",
           },
@@ -875,6 +948,7 @@
             tag: "機場 · 桃園",
             address: "桃園市大園區航站南路9號",
             mapQuery: "臺灣桃園國際機場 桃園市大園區航站南路9號",
+            hours: "無",
             note: "抵達臺灣後的入境與行李提領地點。",
             stay: "航廈",
           },
@@ -986,7 +1060,7 @@
         const item = document.createElement("li");
         item.innerHTML = `
           <span class="pin">${index === 0 ? "起" : index}</span>
-          <span><b>${stop.title}</b><br>${stop.note}</span>
+          <span><b>${stop.title}</b><br>地址：${stop.address}<br>${stop.note}</span>
         `;
         routeList.appendChild(item);
         if (index < stops.length - 1) {
@@ -1190,7 +1264,8 @@
               ${renderStopBadges(stop)}
             </div>
             ${stop.memo ? `<div class="memo-display">${escapeHtml(stop.memo)}</div>` : ""}
-            <p class="address">${stop.address}</p>
+            <p class="address"><b>地址：</b>${stop.address}</p>
+            <p class="hours"><b>營業時間：</b>${escapeHtml(stop.hours || "無")}</p>
             <p class="note">${stop.note}</p>
           <div class="stop-actions">
             <a class="small-button" href="${mapsSearchUrl(stop.mapQuery)}" target="_blank" rel="noreferrer">Google Maps</a>
@@ -1209,25 +1284,89 @@
       window.localStorage.setItem("travelStopOrder-" + date, JSON.stringify(order));
     }
 
+    function itinerarySignature() {
+      const signature = dates.reduce((result, date) => {
+        result[date] = itineraries[date].stops.map((stop) => ({
+          title: stop.title,
+          mapQuery: stop.mapQuery,
+          tag: stop.tag,
+          hours: stop.hours || "無",
+        }));
+        return result;
+      }, {});
+      return JSON.stringify(signature);
+    }
+
+    const DEFAULT_ITINERARY_SIGNATURE = itinerarySignature();
+
+    function clearSavedItineraryState() {
+      window.localStorage.removeItem("travelItineraryStops");
+      window.localStorage.removeItem("travelItinerarySignature");
+      dates.forEach((date) => {
+        window.localStorage.removeItem("travelStopOrder-" + date);
+        window.localStorage.removeItem("travelStopTimes-" + date);
+      });
+    }
+
+    function defaultStopsByTitle() {
+      const defaults = new Map();
+      dates.forEach((date) => {
+        itineraries[date].stops.forEach((stop) => {
+          defaults.set(stop.title, stop);
+        });
+      });
+      return defaults;
+    }
+
+    function syncStopWithDefault(stop, defaults) {
+      const defaultStop = defaults.get(stop.title);
+      if (!defaultStop) return stop;
+
+      return {
+        ...defaultStop,
+        time: stop.time || defaultStop.time,
+        memo: stop.memo || "",
+      };
+    }
+
     function saveItineraries() {
       const savedStops = dates.reduce((result, date) => {
         result[date] = itineraries[date].stops;
         return result;
       }, {});
       window.localStorage.setItem("travelItineraryStops", JSON.stringify(savedStops));
+      window.localStorage.setItem("travelItinerarySignature", DEFAULT_ITINERARY_SIGNATURE);
     }
 
     function loadItineraries() {
       const savedStops = window.localStorage.getItem("travelItineraryStops");
       if (!savedStops) return false;
 
+      const savedSignature = window.localStorage.getItem("travelItinerarySignature");
+
       try {
         const parsedStops = JSON.parse(savedStops);
+        const defaults = defaultStopsByTitle();
+        const savedTitles = new Set();
         dates.forEach((date) => {
           if (Array.isArray(parsedStops[date])) {
-            itineraries[date].stops = parsedStops[date];
+            parsedStops[date].forEach((stop) => savedTitles.add(stop.title));
           }
         });
+
+        dates.forEach((date) => {
+          if (Array.isArray(parsedStops[date])) {
+            const currentDefaultStops = itineraries[date].stops;
+            const mergedStops = parsedStops[date].map((stop) => syncStopWithDefault(stop, defaults));
+            currentDefaultStops.forEach((defaultStop) => {
+              if (!savedTitles.has(defaultStop.title)) {
+                mergedStops.push(defaultStop);
+              }
+            });
+            itineraries[date].stops = mergedStops;
+          }
+        });
+        saveItineraries();
         return true;
       } catch {
         window.localStorage.removeItem("travelItineraryStops");
