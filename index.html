@@ -428,12 +428,6 @@
       margin-top: 10px;
     }
 
-    .mobile-move-controls {
-      display: none;
-      gap: 8px;
-      margin-top: 8px;
-    }
-
     .small-button {
       display: inline-flex;
       align-items: center;
@@ -662,12 +656,12 @@
 
       .stop-card {
         grid-template-columns: 1fr;
-        padding: 54px 16px 16px;
+        padding: 16px;
       }
 
       .drag-button {
-        top: 12px;
-        right: 14px;
+        top: 24px;
+        right: 24px;
         width: 34px;
         height: 34px;
         background: transparent;
@@ -676,7 +670,7 @@
 
       .time {
         display: flex;
-        width: 100%;
+        width: calc(100% - 48px);
         height: auto;
         min-height: 52px;
         padding: 8px 10px;
@@ -696,14 +690,6 @@
       }
 
       .stop-actions .small-button,
-      .mobile-move-controls .small-button {
-        width: auto;
-        flex: 1 1 0;
-      }
-
-      .mobile-move-controls {
-        display: flex;
-      }
 
       .date-tabs {
         gap: 8px 12px;
@@ -1329,10 +1315,6 @@
             <a class="small-button" href="${mapsSearchUrl(stop.mapQuery)}" target="_blank" rel="noreferrer">Google Maps</a>
             <button class="small-button" type="button" data-memo-button="${index}">備註</button>
             </div>
-            <div class="mobile-move-controls" aria-label="手機排序控制">
-              <button class="small-button" type="button" data-mobile-move="up" data-mobile-index="${index}" ${index === 0 ? "disabled" : ""}>上移</button>
-              <button class="small-button" type="button" data-mobile-move="down" data-mobile-index="${index}" ${index === stops.length - 1 ? "disabled" : ""}>下移</button>
-            </div>
           </div>
         `;
         block.appendChild(article);
@@ -1690,22 +1672,6 @@
     });
 
     timeline.addEventListener("click", (event) => {
-      const moveButton = event.target.closest("[data-mobile-move]");
-      if (moveButton) {
-        const index = Number(moveButton.dataset.mobileIndex);
-        const direction = moveButton.dataset.mobileMove;
-        const stops = itineraries[selectedDate].stops;
-        const targetIndex = direction === "up" ? index - 1 : index + 1;
-        if (targetIndex < 0 || targetIndex >= stops.length) return;
-        const [movedStop] = stops.splice(index, 1);
-        stops.splice(targetIndex, 0, movedStop);
-        saveStopOrder();
-        saveStopTimes();
-        saveItineraries();
-        renderPage();
-        return;
-      }
-
       const button = event.target.closest("[data-memo-button]");
       if (!button) return;
 
