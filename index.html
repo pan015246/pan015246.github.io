@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>9/12-9/19 東京旅行行程</title>
+  <title>2026年 9/12-9/19 東京旅行行程</title>
   <style>
     :root {
       color-scheme: light;
@@ -551,6 +551,28 @@
       color: var(--ink);
     }
 
+    .route-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    .route-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 30px;
+      padding: 5px 9px;
+      border: 1px solid rgba(32, 36, 42, 0.12);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.78);
+      color: var(--ink);
+      font-size: 0.86rem;
+      font-weight: 800;
+      text-decoration: none;
+    }
+
     .pin {
       display: grid;
       place-items: center;
@@ -661,16 +683,45 @@
 
       .drag-button {
         top: 24px;
-        right: 24px;
-        width: 34px;
+        right: 18px;
+        width: 74px;
         height: 34px;
-        background: transparent;
-        border-color: rgba(32, 36, 42, 0.1);
+        grid-template-columns: 18px auto;
+        gap: 5px;
+        padding: 0 8px;
+        background: rgba(204, 63, 85, 0.08);
+        border-color: rgba(204, 63, 85, 0.22);
+        color: var(--accent-strong);
+        font-size: 0.82rem;
+        font-weight: 800;
+      }
+
+      .drag-button::after {
+        content: "拖曳";
+      }
+
+      .drag-button:active,
+      .stop-card.dragging .drag-button {
+        background: rgba(204, 63, 85, 0.16);
+        border-color: rgba(204, 63, 85, 0.42);
+      }
+
+      .stop-card.dragging {
+        opacity: 0.92;
+        border-color: rgba(204, 63, 85, 0.72);
+        background: rgba(255, 248, 249, 0.98);
+        box-shadow: 0 0 0 3px rgba(204, 63, 85, 0.18), 0 18px 42px rgba(31, 36, 43, 0.18);
+      }
+
+      .stop-card.drag-over {
+        border-color: rgba(22, 124, 128, 0.72);
+        background: rgba(240, 247, 247, 0.98);
+        box-shadow: 0 0 0 3px rgba(22, 124, 128, 0.16), 0 18px 42px rgba(31, 36, 43, 0.16);
       }
 
       .time {
         display: flex;
-        width: calc(100% - 48px);
+        width: calc(100% - 88px);
         height: auto;
         min-height: 52px;
         padding: 8px 10px;
@@ -766,17 +817,17 @@
             mapQuery: "臺北松山機場 台北市松山區敦化北路340-9號",
             hours: "無",
             note: "出發機場，建議確認航空公司櫃台與報到時間。",
-            stay: "航廈",
+            stay: "第一航廈",
           },
           {
             time: "未定",
-            title: "羽田機場第三航廈",
+            title: "羽田機場",
             tag: "機場 · 羽田",
             address: "東京都大田区羽田空港2丁目6-5",
             mapQuery: "羽田空港 第3ターミナル 東京都大田区羽田空港2丁目6-5",
             hours: "無",
             note: "抵達或出發航廈，建議確認航空公司櫃台與交通動線。",
-            stay: "航廈",
+            stay: "第三航廈",
           },
           {
             time: "未定",
@@ -978,13 +1029,13 @@
         stops: [
           {
             time: "未定",
-            title: "成田國際機場第二航廈",
+            title: "成田國際機場",
             tag: "機場 · 成田",
             address: "千葉県成田市古込1-1 成田国際空港 第2ターミナル",
             mapQuery: "成田国際空港 第2ターミナル 千葉県成田市古込1-1",
             hours: "無",
             note: "返程出發航廈，建議確認航空公司櫃台與登機時間。",
-            stay: "航廈",
+            stay: "第二航廈",
           },
           {
             time: "未定",
@@ -994,7 +1045,7 @@
             mapQuery: "臺灣桃園國際機場 桃園市大園區航站南路9號",
             hours: "無",
             note: "抵達臺灣後的入境與行李提領地點。",
-            stay: "航廈",
+            stay: "第二航廈",
           },
         ],
       },
@@ -1033,9 +1084,21 @@
       let url = "https://www.google.com/maps/dir/?api=1"
         + "&origin=" + encodeURIComponent(stops[0].mapQuery)
         + "&destination=" + encodeURIComponent(stops[stops.length - 1].mapQuery)
-        + "&travelmode=walking";
+        + "&travelmode=transit";
       if (waypoints) url += "&waypoints=" + encodeURIComponent(waypoints);
       return url;
+    }
+
+    function segmentTransitUrl(from, to) {
+      return "https://www.google.com/maps/dir/?api=1"
+        + "&origin=" + encodeURIComponent(from.mapQuery)
+        + "&destination=" + encodeURIComponent(to.mapQuery)
+        + "&travelmode=transit"
+        + "&dir_action=navigate";
+    }
+
+    function isAirport(stop) {
+      return stop.tag.split("·").some((part) => part.trim() === "機場");
     }
 
     function formatTime(value) {
@@ -1104,7 +1167,16 @@
         const item = document.createElement("li");
         item.innerHTML = `
           <span class="pin">${index === 0 ? "起" : index}</span>
-          <span><b>${stop.title}</b><br>地址：${stop.address}<br>${stop.note}</span>
+          <span>
+            <b>${stop.title}</b><br>
+            地址：${stop.address}<br>
+            ${stop.note}
+            ${index < stops.length - 1 && !(isAirport(stop) && isAirport(stops[index + 1])) ? `
+              <div class="route-actions">
+                <a class="route-link" href="${segmentTransitUrl(stop, stops[index + 1])}" target="_blank" rel="noreferrer">下一站</a>
+              </div>
+            ` : ""}
+          </span>
         `;
         routeList.appendChild(item);
         if (index < stops.length - 1) {
@@ -1149,9 +1221,16 @@
 
     const badgeStyles = {
       "住宿": "color:#167c80;background:rgba(22,124,128,0.12);",
-      "三島": "color:#2867a5;background:rgba(40,103,165,0.12);",
+      "機場": "color:#4338ca;background:rgba(67,56,202,0.12);",
+      "台北": "color:#b77716;background:rgba(183,119,22,0.14);",
+      "羽田": "color:#b77716;background:rgba(183,119,22,0.14);",
+      "東京": "color:#b77716;background:rgba(183,119,22,0.14);",
+      "三島": "color:#b77716;background:rgba(183,119,22,0.14);",
       "熱海": "color:#b77716;background:rgba(183,119,22,0.14);",
-      "世田谷": "color:#8057a8;background:rgba(128,87,168,0.13);",
+      "世田谷": "color:#b77716;background:rgba(183,119,22,0.14);",
+      "原宿": "color:#b77716;background:rgba(183,119,22,0.14);",
+      "成田": "color:#b77716;background:rgba(183,119,22,0.14);",
+      "桃園": "color:#b77716;background:rgba(183,119,22,0.14);",
       "商店街": "color:#9e263d;background:rgba(204,63,85,0.1);",
       "體驗": "color:#7a5a14;background:rgba(183,119,22,0.12);",
       "浴衣": "color:#167c80;background:rgba(22,124,128,0.1);",
@@ -1169,7 +1248,7 @@
     }
 
     function isAreaLabel(label) {
-      return ["三島", "熱海", "世田谷", "原宿"].includes(label);
+      return ["台北", "羽田", "東京", "三島", "熱海", "世田谷", "原宿", "成田", "桃園"].includes(label);
     }
 
     function renderStopBadges(stop) {
@@ -1353,17 +1432,24 @@
     }
 
     function defaultStopsByTitle() {
-      const defaults = new Map();
+      const byTitle = new Map();
+      const byMapQuery = new Map();
       dates.forEach((date) => {
         itineraries[date].stops.forEach((stop) => {
-          defaults.set(stop.title, stop);
+          byTitle.set(stop.title, stop);
+          byMapQuery.set(stop.mapQuery, stop);
         });
       });
-      return defaults;
+      return { byTitle, byMapQuery };
     }
 
     function syncStopWithDefault(stop, defaults) {
-      const defaultStop = defaults.get(stop.title);
+      const titleAliases = {
+        "成田國際機場": "成田國際機場第二航廈",
+      };
+      const defaultStop = defaults.byTitle.get(stop.title)
+        || defaults.byTitle.get(titleAliases[stop.title])
+        || defaults.byMapQuery.get(stop.mapQuery);
       if (!defaultStop) return stop;
 
       return {
@@ -1401,9 +1487,19 @@
         dates.forEach((date) => {
           if (Array.isArray(parsedStops[date])) {
             const currentDefaultStops = itineraries[date].stops;
-            const mergedStops = parsedStops[date].map((stop) => syncStopWithDefault(stop, defaults));
+            const mergedStops = [];
+            const mergedKeys = new Set();
+            parsedStops[date].forEach((stop) => {
+              const syncedStop = syncStopWithDefault(stop, defaults);
+              const key = syncedStop.mapQuery || syncedStop.title;
+              if (mergedKeys.has(key)) return;
+              mergedKeys.add(key);
+              mergedStops.push(syncedStop);
+            });
             currentDefaultStops.forEach((defaultStop) => {
-              if (!savedTitles.has(defaultStop.title)) {
+              const key = defaultStop.mapQuery || defaultStop.title;
+              if (!savedTitles.has(defaultStop.title) && !mergedKeys.has(key)) {
+                mergedKeys.add(key);
                 mergedStops.push(defaultStop);
               }
             });
@@ -1466,6 +1562,7 @@
       const hasRoute = stops.length > 1;
 
       fullRoute.href = hasRoute ? fullRouteUrl(stops) : "#";
+      fullRoute.textContent = hasRoute && stops.length > 2 ? "開啟 Google Maps 完整路線參考" : "開啟 Google Maps 完整路線";
       fullRoute.setAttribute("aria-disabled", hasRoute ? "false" : "true");
       fullRoute.style.pointerEvents = hasRoute ? "" : "none";
       fullRoute.style.opacity = hasRoute ? "1" : "0.48";
