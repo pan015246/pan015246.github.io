@@ -684,20 +684,18 @@
       .drag-button {
         top: 24px;
         right: 18px;
-        width: 74px;
+        width: 38px;
         height: 34px;
-        grid-template-columns: 18px auto;
-        gap: 5px;
+        grid-template-columns: 1fr;
+        gap: 0;
         padding: 0 8px;
         background: rgba(204, 63, 85, 0.08);
         border-color: rgba(204, 63, 85, 0.22);
         color: var(--accent-strong);
-        font-size: 0.82rem;
-        font-weight: 800;
       }
 
       .drag-button::after {
-        content: "拖曳";
+        content: none;
       }
 
       .drag-button:active,
@@ -721,7 +719,7 @@
 
       .time {
         display: flex;
-        width: calc(100% - 88px);
+        width: calc(100% - 52px);
         height: auto;
         min-height: 52px;
         padding: 8px 10px;
