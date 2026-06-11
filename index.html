@@ -1535,9 +1535,15 @@
       }
     }
 
+    function stopTimeKeys(stop) {
+      return [stop.mapQuery, stop.title].filter(Boolean);
+    }
+
     function saveStopTimes(date = selectedDate) {
       const times = itineraries[date].stops.reduce((result, stop) => {
-        result[stop.title] = stop.time;
+        stopTimeKeys(stop).forEach((key) => {
+          result[key] = stop.time;
+        });
         return result;
       }, {});
       window.localStorage.setItem("travelStopTimes-" + date, JSON.stringify(times));
@@ -1570,8 +1576,11 @@
       try {
         const times = JSON.parse(savedTimes);
         itineraries[date].stops.forEach((stop) => {
-          if (typeof times[stop.title] === "string") {
-            stop.time = times[stop.title];
+          const savedTime = stopTimeKeys(stop)
+            .map((key) => times[key])
+            .find((time) => typeof time === "string");
+          if (savedTime) {
+            stop.time = savedTime;
           }
         });
       } catch {
@@ -1786,7 +1795,10 @@
       input.value = stop.time;
       saveStopTimes();
       saveItineraries();
+      renderRouteList(itineraries[selectedDate].stops);
+      renderLodging(itineraries[selectedDate].stops);
       renderReminders(itineraries[selectedDate].stops);
+      renderActions(itineraries[selectedDate].stops);
     });
 
     timeline.addEventListener("click", (event) => {
