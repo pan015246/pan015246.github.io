@@ -224,27 +224,31 @@
       place-items: center;
       width: 36px;
       height: 32px;
-      border: 1px solid rgba(32, 36, 42, 0.12);
+      border: 1px solid rgba(32, 36, 42, 0.08);
       border-radius: 999px;
-      background: rgba(248, 250, 249, 0.9);
-      color: var(--muted);
+      background: rgba(248, 250, 249, 0.78);
+      color: rgba(95, 105, 118, 0.82);
       cursor: grab;
       touch-action: none;
-      box-shadow: none;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.78);
+      transition: color 160ms ease, background 160ms ease, border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
     }
 
     .drag-button:hover {
       color: var(--accent-strong);
-      border-color: rgba(204, 63, 85, 0.3);
+      background: rgba(204, 63, 85, 0.07);
+      border-color: rgba(204, 63, 85, 0.22);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.86), 0 8px 18px rgba(31, 36, 43, 0.08);
     }
 
     .drag-button:active {
       cursor: grabbing;
+      transform: scale(0.96);
     }
 
     .drag-button svg {
-      width: 19px;
-      height: 19px;
+      width: 18px;
+      height: 18px;
       pointer-events: none;
     }
 
@@ -683,29 +687,39 @@
       }
 
       .drag-button {
-        top: 24px;
-        right: 18px;
-        width: 44px;
-        height: 34px;
+        top: 20px;
+        right: 16px;
+        width: 40px;
+        height: 40px;
         grid-template-columns: 1fr;
         gap: 0;
-        padding: 0 8px;
-        border-radius: 999px;
-        background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(204, 63, 85, 0.08));
-        border-color: rgba(204, 63, 85, 0.28);
-        color: var(--accent-strong);
-        box-shadow: 0 8px 18px rgba(31, 36, 43, 0.1);
+        padding: 0;
+        border-radius: 12px;
+        background: rgba(245, 248, 248, 0.92);
+        border-color: rgba(22, 124, 128, 0.13);
+        color: rgba(95, 105, 118, 0.78);
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.86), 0 8px 18px rgba(31, 36, 43, 0.07);
+        -webkit-tap-highlight-color: transparent;
       }
 
       .drag-button::after {
         content: none;
       }
 
+      .drag-button svg {
+        width: 20px;
+        height: 20px;
+      }
+
       .drag-button:active,
       .stop-card.dragging .drag-button {
-        background: rgba(204, 63, 85, 0.18);
+        color: var(--accent-strong);
+        background: #fff4f5;
         border-color: rgba(204, 63, 85, 0.58);
-        box-shadow: 0 0 0 3px rgba(204, 63, 85, 0.16), 0 10px 22px rgba(31, 36, 43, 0.16);
+        box-shadow:
+          inset 0 1px 0 rgba(255, 255, 255, 0.9),
+          0 0 0 4px rgba(204, 63, 85, 0.18),
+          0 12px 24px rgba(31, 36, 43, 0.18);
       }
 
       .stop-card.dragging {
@@ -1376,10 +1390,13 @@
         article.dataset.index = index;
         article.innerHTML = `
           <button class="drag-button" type="button" draggable="true" aria-label="拖曳調整 ${stop.title} 順序" title="拖曳調整順序">
-            <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
-              <path d="M8 7h8"></path>
-              <path d="M7 12h10"></path>
-              <path d="M8 17h8"></path>
+            <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor">
+              <circle cx="9" cy="7" r="1.65"></circle>
+              <circle cx="15" cy="7" r="1.65"></circle>
+              <circle cx="9" cy="12" r="1.65"></circle>
+              <circle cx="15" cy="12" r="1.65"></circle>
+              <circle cx="9" cy="17" r="1.65"></circle>
+              <circle cx="15" cy="17" r="1.65"></circle>
             </svg>
           </button>
           <div class="time">
