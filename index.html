@@ -155,19 +155,6 @@
       box-shadow: 0 10px 24px rgba(31, 36, 43, 0.12);
     }
 
-    .sync-status {
-      display: inline-flex;
-      align-items: center;
-      min-height: 42px;
-      padding: 8px 12px;
-      border: 1px solid rgba(32, 36, 42, 0.1);
-      border-radius: 8px;
-      background: rgba(255, 255, 255, 0.78);
-      color: var(--muted);
-      font-size: 0.9rem;
-      line-height: 1.35;
-    }
-
     .layout {
       display: grid;
       grid-template-columns: 340px minmax(0, 1fr);
@@ -795,10 +782,6 @@
   <main>
     <nav class="top-actions" aria-label="主要操作">
       <a class="button primary" id="fullRoute" target="_blank" rel="noreferrer">開啟 Google Maps 完整路線</a>
-      <button class="button" type="button" id="syncSettings">同步設定</button>
-      <button class="button" type="button" id="syncLoad">從 Gist 讀取</button>
-      <button class="button" type="button" id="syncSave">儲存到 Gist</button>
-      <span class="sync-status" id="syncStatus">本機模式</span>
     </nav>
 
     <nav class="date-tabs" id="dateTabs" aria-label="選擇日期"></nav>
@@ -842,8 +825,6 @@
 
   <script>
     const dates = ["9/12", "9/13", "9/14", "9/15", "9/16", "9/17", "9/18", "9/19"];
-    const SYNC_CONFIG_KEY = "travelGistSyncConfig";
-    const DEFAULT_SYNC_FILE = "schedule.json";
     const itineraries = {
       "9/12": {
         eyebrow: "9/12 Mishima",
@@ -1176,146 +1157,7 @@
     const memoTextarea = document.getElementById("memoTextarea");
     const memoSave = document.getElementById("memoSave");
     const memoCancel = document.getElementById("memoCancel");
-    const syncSettings = document.getElementById("syncSettings");
-    const syncLoad = document.getElementById("syncLoad");
-    const syncSave = document.getElementById("syncSave");
-    const syncStatus = document.getElementById("syncStatus");
     let activeMemoIndex = null;
-    let remoteSaveTimer = null;
-
-    function getSyncConfig() {
-      try {
-        return {
-          gistId: "",
-          fileName: DEFAULT_SYNC_FILE,
-          apiUrl: "",
-          password: "",
-          ...JSON.parse(window.localStorage.getItem(SYNC_CONFIG_KEY) || "{}"),
-        };
-      } catch {
-        window.localStorage.removeItem(SYNC_CONFIG_KEY);
-        return { gistId: "", fileName: DEFAULT_SYNC_FILE, apiUrl: "", password: "" };
-      }
-    }
-
-    function saveSyncConfig(config) {
-      window.localStorage.setItem(SYNC_CONFIG_KEY, JSON.stringify(config));
-    }
-
-    function setSyncStatus(message) {
-      syncStatus.textContent = message;
-    }
-
-    function updateSyncStatus() {
-      const config = getSyncConfig();
-      if (!config.gistId && !config.apiUrl) {
-        setSyncStatus("本機模式");
-        return;
-      }
-      if (config.gistId && config.apiUrl) {
-        setSyncStatus("Gist 同步已設定");
-        return;
-      }
-      setSyncStatus("同步設定未完成");
-    }
-
-    function configureSync() {
-      const current = getSyncConfig();
-      const gistId = window.prompt("Gist ID", current.gistId);
-      if (gistId === null) return;
-      const fileName = window.prompt("Gist 檔名", current.fileName || DEFAULT_SYNC_FILE);
-      if (fileName === null) return;
-      const apiUrl = window.prompt("Cloudflare Worker / API 儲存網址", current.apiUrl);
-      if (apiUrl === null) return;
-      const password = window.prompt("同步密碼（需與 Worker 的 TRIP_PASSWORD 相同，可留空）", current.password);
-      if (password === null) return;
-
-      saveSyncConfig({
-        gistId: gistId.trim(),
-        fileName: (fileName.trim() || DEFAULT_SYNC_FILE),
-        apiUrl: apiUrl.trim(),
-        password,
-      });
-      updateSyncStatus();
-    }
-
-    async function loadRemoteItineraries() {
-      const config = getSyncConfig();
-      if (!config.gistId) {
-        setSyncStatus("請先設定 Gist ID");
-        return false;
-      }
-
-      setSyncStatus("正在讀取 Gist...");
-      try {
-        const response = await fetch("https://api.github.com/gists/" + encodeURIComponent(config.gistId), {
-          headers: { Accept: "application/vnd.github+json" },
-        });
-        if (!response.ok) throw new Error("HTTP " + response.status);
-
-        const gist = await response.json();
-        const file = gist.files?.[config.fileName || DEFAULT_SYNC_FILE];
-        if (!file?.content) throw new Error("找不到 " + (config.fileName || DEFAULT_SYNC_FILE));
-
-        const payload = JSON.parse(file.content);
-        const remoteStops = stopsFromSchedulePayload(payload);
-        if (!applySavedStops(remoteStops)) throw new Error("資料格式不正確");
-
-        if (dates.includes(payload.selectedDate)) {
-          selectedDate = payload.selectedDate;
-          window.localStorage.setItem("selectedTravelDate", selectedDate);
-        }
-        saveItineraries({ remote: false });
-        dates.forEach(loadStopTimes);
-        renderPage();
-        setSyncStatus("已讀取 Gist " + new Date().toLocaleTimeString("zh-TW", { hour: "2-digit", minute: "2-digit" }));
-        return true;
-      } catch (error) {
-        setSyncStatus("讀取失敗：" + error.message);
-        return false;
-      }
-    }
-
-    async function saveRemoteItineraries() {
-      const config = getSyncConfig();
-      if (!config.apiUrl) {
-        setSyncStatus("請先設定 API 儲存網址");
-        return false;
-      }
-
-      setSyncStatus("正在儲存到 Gist...");
-      try {
-        const headers = { "Content-Type": "application/json" };
-        if (config.password) headers["X-Trip-Password"] = config.password;
-
-        const response = await fetch(config.apiUrl, {
-          method: "POST",
-          headers,
-          body: JSON.stringify({
-            fileName: config.fileName || DEFAULT_SYNC_FILE,
-            schedule: schedulePayload(),
-          }),
-        });
-        if (!response.ok) throw new Error("HTTP " + response.status);
-
-        setSyncStatus("已儲存 Gist " + new Date().toLocaleTimeString("zh-TW", { hour: "2-digit", minute: "2-digit" }));
-        return true;
-      } catch (error) {
-        setSyncStatus("儲存失敗：" + error.message);
-        return false;
-      }
-    }
-
-    function scheduleRemoteSave() {
-      const config = getSyncConfig();
-      if (!config.apiUrl) {
-        setSyncStatus(config.gistId ? "本機已儲存，尚未設定儲存 API" : "本機已儲存");
-        return;
-      }
-      window.clearTimeout(remoteSaveTimer);
-      setSyncStatus("已修改，準備同步...");
-      remoteSaveTimer = window.setTimeout(saveRemoteItineraries, 900);
-    }
 
     function renderDateTabs() {
       dateTabs.innerHTML = "";
@@ -1584,7 +1426,6 @@
     function saveStopOrder(date = selectedDate) {
       const order = itineraries[date].stops.map((stop) => stop.title);
       window.localStorage.setItem("travelStopOrder-" + date, JSON.stringify(order));
-      scheduleRemoteSave();
     }
 
     function itinerarySignature() {
@@ -1639,80 +1480,13 @@
       };
     }
 
-    function schedulePayload() {
-      return {
-        version: 1,
-        updatedAt: new Date().toISOString(),
-        dates,
-        selectedDate,
-        itineraries: dates.reduce((result, date) => {
-          result[date] = {
-            ...itineraries[date],
-            stops: itineraries[date].stops,
-          };
-          return result;
-        }, {}),
-      };
-    }
-
-    function stopsFromSchedulePayload(payload) {
-      if (!payload || typeof payload !== "object") return null;
-      if (payload.itineraries && typeof payload.itineraries === "object") {
-        return dates.reduce((result, date) => {
-          result[date] = payload.itineraries[date]?.stops || [];
-          return result;
-        }, {});
-      }
-      if (payload.stops && typeof payload.stops === "object") return payload.stops;
-      return payload;
-    }
-
-    function applySavedStops(parsedStops) {
-      if (!parsedStops || typeof parsedStops !== "object") return false;
-
-      const defaults = defaultStopsByTitle();
-      const savedTitles = new Set();
-      dates.forEach((date) => {
-        if (Array.isArray(parsedStops[date])) {
-          parsedStops[date].forEach((stop) => savedTitles.add(stop.title));
-        }
-      });
-
-      dates.forEach((date) => {
-        if (Array.isArray(parsedStops[date])) {
-          const currentDefaultStops = itineraries[date].stops;
-          const mergedStops = [];
-          const mergedKeys = new Set();
-          parsedStops[date].forEach((stop) => {
-            const syncedStop = syncStopWithDefault(stop, defaults);
-            const key = syncedStop.mapQuery || syncedStop.title;
-            if (mergedKeys.has(key)) return;
-            mergedKeys.add(key);
-            mergedStops.push(syncedStop);
-          });
-          currentDefaultStops.forEach((defaultStop) => {
-            const key = defaultStop.mapQuery || defaultStop.title;
-            if (!savedTitles.has(defaultStop.title) && !mergedKeys.has(key)) {
-              mergedKeys.add(key);
-              mergedStops.push(defaultStop);
-            }
-          });
-          itineraries[date].stops = mergedStops;
-        }
-      });
-      return true;
-    }
-
-    function saveItineraries(options = {}) {
+    function saveItineraries() {
       const savedStops = dates.reduce((result, date) => {
         result[date] = itineraries[date].stops;
         return result;
       }, {});
       window.localStorage.setItem("travelItineraryStops", JSON.stringify(savedStops));
       window.localStorage.setItem("travelItinerarySignature", DEFAULT_ITINERARY_SIGNATURE);
-      if (options.remote !== false) {
-        scheduleRemoteSave();
-      }
     }
 
     function loadItineraries() {
@@ -1723,8 +1497,37 @@
 
       try {
         const parsedStops = JSON.parse(savedStops);
-        applySavedStops(parsedStops);
-        saveItineraries({ remote: false });
+        const defaults = defaultStopsByTitle();
+        const savedTitles = new Set();
+        dates.forEach((date) => {
+          if (Array.isArray(parsedStops[date])) {
+            parsedStops[date].forEach((stop) => savedTitles.add(stop.title));
+          }
+        });
+
+        dates.forEach((date) => {
+          if (Array.isArray(parsedStops[date])) {
+            const currentDefaultStops = itineraries[date].stops;
+            const mergedStops = [];
+            const mergedKeys = new Set();
+            parsedStops[date].forEach((stop) => {
+              const syncedStop = syncStopWithDefault(stop, defaults);
+              const key = syncedStop.mapQuery || syncedStop.title;
+              if (mergedKeys.has(key)) return;
+              mergedKeys.add(key);
+              mergedStops.push(syncedStop);
+            });
+            currentDefaultStops.forEach((defaultStop) => {
+              const key = defaultStop.mapQuery || defaultStop.title;
+              if (!savedTitles.has(defaultStop.title) && !mergedKeys.has(key)) {
+                mergedKeys.add(key);
+                mergedStops.push(defaultStop);
+              }
+            });
+            itineraries[date].stops = mergedStops;
+          }
+        });
+        saveItineraries();
         return true;
       } catch {
         window.localStorage.removeItem("travelItineraryStops");
@@ -2045,10 +1848,6 @@
       if (event.target === memoModal) closeMemoModal();
     });
 
-    syncSettings.addEventListener("click", configureSync);
-    syncLoad.addEventListener("click", loadRemoteItineraries);
-    syncSave.addEventListener("click", saveRemoteItineraries);
-
     window.addEventListener("storage", (event) => {
       if (!event.key) return;
 
@@ -2066,21 +1865,11 @@
       window.history.replaceState(null, "", "#" + dateToHash(selectedDate));
     }
 
-    async function initPage() {
-      updateSyncStatus();
-      if (!loadItineraries()) {
-        dates.forEach(loadStopOrder);
-      }
-      dates.forEach(loadStopTimes);
-      renderPage();
-
-      const config = getSyncConfig();
-      if (config.gistId) {
-        await loadRemoteItineraries();
-      }
+    if (!loadItineraries()) {
+      dates.forEach(loadStopOrder);
     }
-
-    initPage();
+    dates.forEach(loadStopTimes);
+    renderPage();
 
   </script>
 </body>
