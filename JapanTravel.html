@@ -222,10 +222,10 @@
       right: 12px;
       display: grid;
       place-items: center;
-      width: 34px;
-      height: 34px;
+      width: 36px;
+      height: 32px;
       border: 1px solid rgba(32, 36, 42, 0.12);
-      border-radius: 8px;
+      border-radius: 999px;
       background: rgba(248, 250, 249, 0.9);
       color: var(--muted);
       cursor: grab;
@@ -243,8 +243,8 @@
     }
 
     .drag-button svg {
-      width: 18px;
-      height: 18px;
+      width: 19px;
+      height: 19px;
       pointer-events: none;
     }
 
@@ -685,14 +685,16 @@
       .drag-button {
         top: 24px;
         right: 18px;
-        width: 38px;
+        width: 44px;
         height: 34px;
         grid-template-columns: 1fr;
         gap: 0;
         padding: 0 8px;
-        background: rgba(204, 63, 85, 0.08);
-        border-color: rgba(204, 63, 85, 0.22);
+        border-radius: 999px;
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(204, 63, 85, 0.08));
+        border-color: rgba(204, 63, 85, 0.28);
         color: var(--accent-strong);
+        box-shadow: 0 8px 18px rgba(31, 36, 43, 0.1);
       }
 
       .drag-button::after {
@@ -701,8 +703,9 @@
 
       .drag-button:active,
       .stop-card.dragging .drag-button {
-        background: rgba(204, 63, 85, 0.16);
-        border-color: rgba(204, 63, 85, 0.42);
+        background: rgba(204, 63, 85, 0.18);
+        border-color: rgba(204, 63, 85, 0.58);
+        box-shadow: 0 0 0 3px rgba(204, 63, 85, 0.16), 0 10px 22px rgba(31, 36, 43, 0.16);
       }
 
       .stop-card.dragging {
@@ -1373,13 +1376,10 @@
         article.dataset.index = index;
         article.innerHTML = `
           <button class="drag-button" type="button" draggable="true" aria-label="拖曳調整 ${stop.title} 順序" title="拖曳調整順序">
-            <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-              <circle cx="9" cy="6" r="1"></circle>
-              <circle cx="15" cy="6" r="1"></circle>
-              <circle cx="9" cy="12" r="1"></circle>
-              <circle cx="15" cy="12" r="1"></circle>
-              <circle cx="9" cy="18" r="1"></circle>
-              <circle cx="15" cy="18" r="1"></circle>
+            <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+              <path d="M8 7h8"></path>
+              <path d="M7 12h10"></path>
+              <path d="M8 17h8"></path>
             </svg>
           </button>
           <div class="time">
