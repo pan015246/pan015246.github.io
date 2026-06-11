@@ -38,10 +38,10 @@
     }
 
     .hero {
-      min-height: 34vh;
+      min-height: 26vh;
       display: grid;
       align-items: end;
-      padding: 34px 0 24px;
+      padding: 26px 0 18px;
       background:
         linear-gradient(180deg, rgba(18, 23, 28, 0.18), rgba(18, 23, 28, 0.66)),
         url("https://images.unsplash.com/photo-1542051841857-5f90071e7989?auto=format&fit=crop&w=1800&q=80") center 46% / cover;
@@ -66,7 +66,7 @@
 
     h1 {
       margin: 0;
-      font-size: clamp(2rem, 4.6vw, 3.9rem);
+      font-size: clamp(1.75rem, 3.6vw, 3.1rem);
       line-height: 1.08;
       letter-spacing: 0;
       max-width: 920px;
@@ -626,7 +626,7 @@
 
     @media (max-width: 860px) {
       .hero {
-        min-height: 30vh;
+        min-height: 24vh;
       }
 
       .layout {
@@ -674,7 +674,7 @@
       }
 
       h1 {
-        font-size: clamp(1.8rem, 10vw, 2.8rem);
+        font-size: clamp(1.55rem, 8.4vw, 2.35rem);
       }
 
       .stop-card {
@@ -757,7 +757,7 @@
   <header class="hero">
     <div class="hero-inner">
       <p class="eyebrow" id="heroEyebrow">9/12-9/19 Tokyo</p>
-      <h1 id="heroTitle">【日本關東自由行】東京・富士山・熱海 8 天 7 夜行程規劃</h1>
+      <h1 id="heroTitle">【日本關東自由行】東京・富士山・熱海 8天 7夜旅遊規劃</h1>
       <p id="heroDescription">點選日期查看當日行程。已安排的日期會顯示時間軸、路線順序與 Google Maps 導航。</p>
     </div>
   </header>
@@ -1352,7 +1352,7 @@
 
       return {
         eyebrow: areas.length ? `${selectedDate} ${areas.join(" · ")}` : itinerary.eyebrow,
-        title: "【日本關東自由行】東京・富士山・熱海 8 天 7 夜行程規劃",
+        title: "【日本關東自由行】東京・富士山・熱海 8天 7夜旅遊規劃",
         description: `今日行程：${descriptionStops}。`,
       };
     }
