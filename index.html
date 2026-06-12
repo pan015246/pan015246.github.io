@@ -682,19 +682,20 @@
       }
 
       .stop-card {
-        grid-template-columns: 1fr;
-        padding: 16px;
+        grid-template-columns: 58px minmax(0, 1fr);
+        gap: 10px;
+        padding: 12px 44px 12px 12px;
       }
 
       .drag-button {
-        top: 20px;
-        right: 16px;
-        width: 40px;
-        height: 40px;
+        top: 12px;
+        right: 10px;
+        width: 32px;
+        height: 32px;
         grid-template-columns: 1fr;
         gap: 0;
         padding: 0;
-        border-radius: 12px;
+        border-radius: 10px;
         background: rgba(245, 248, 248, 0.92);
         border-color: rgba(22, 124, 128, 0.13);
         color: rgba(95, 105, 118, 0.78);
@@ -707,8 +708,8 @@
       }
 
       .drag-button svg {
-        width: 20px;
-        height: 20px;
+        width: 17px;
+        height: 17px;
       }
 
       .drag-button:active,
@@ -742,19 +743,59 @@
       }
 
       .time {
-        display: flex;
-        width: calc(100% - 52px);
-        height: auto;
+        width: 52px;
         min-height: 52px;
-        padding: 8px 10px;
+        padding: 6px 5px;
         border-radius: 8px;
-        justify-content: flex-start;
-        align-items: center;
       }
 
       .time-input {
-        width: 86px;
-        min-height: 36px;
+        width: 44px;
+        min-height: 29px;
+        font-size: 0.84rem;
+      }
+
+      .stop h3 {
+        margin-bottom: 5px;
+        padding-right: 0;
+        font-size: 1rem;
+        line-height: 1.28;
+      }
+
+      .meta-row {
+        gap: 4px;
+        margin-bottom: 7px;
+      }
+
+      .tag,
+      .area-tag,
+      .lodging-tag,
+      .stay-tag {
+        padding: 3px 7px;
+        font-size: 0.76rem;
+        line-height: 1.25;
+      }
+
+      .address,
+      .note,
+      .hours,
+      .memo-display {
+        font-size: 0.9rem;
+        line-height: 1.48;
+      }
+
+      .hours {
+        margin-top: 5px;
+      }
+
+      .memo-display {
+        margin-bottom: 8px;
+        padding: 7px 8px;
+      }
+
+      .stop-actions {
+        gap: 6px;
+        margin-top: 9px;
       }
 
       .button,
@@ -762,7 +803,12 @@
         width: 100%;
       }
 
-      .stop-actions .small-button,
+      .stop-actions .small-button {
+        width: auto;
+        min-height: 32px;
+        padding: 6px 9px;
+        font-size: 0.9rem;
+      }
 
       .date-tabs {
         gap: 8px 12px;
@@ -832,7 +878,7 @@
         description: "三島站周邊住宿日，已加入東橫INN 富士山三島站。",
         stops: [
           {
-            time: "未定",
+            time: "09:00",
             title: "臺北松山機場",
             tag: "機場 · 台北",
             address: "台北市松山區敦化北路340-9號",
@@ -842,7 +888,7 @@
             stay: "第一航廈",
           },
           {
-            time: "未定",
+            time: "未13:10",
             title: "羽田機場",
             tag: "機場 · 羽田",
             address: "東京都大田区羽田空港2丁目6-5",
@@ -1050,7 +1096,7 @@
         description: "從成田國際機場第二航廈出發，抵達臺灣桃園國際機場。",
         stops: [
           {
-            time: "未定",
+            time: "20:00",
             title: "成田國際機場",
             tag: "機場 · 成田",
             address: "千葉県成田市古込1-1 成田国際空港 第2ターミナル",
@@ -1060,7 +1106,7 @@
             stay: "第二航廈",
           },
           {
-            time: "未定",
+            time: "22:45",
             title: "臺灣桃園國際機場",
             tag: "機場 · 桃園",
             address: "桃園市大園區航站南路9號",
