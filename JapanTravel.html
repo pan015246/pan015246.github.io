@@ -1041,7 +1041,8 @@
             title: "下吉田站",
             tag: "車站 · 富士吉田",
             address: "日本〒403-0011 Yamanashi, Fujiyoshida, Arakura, ８４０",
-            mapQuery: "下吉田駅 日本〒403-0011 Yamanashi, Fujiyoshida, Arakura, ８４０",
+            mapQuery: "35.49778,138.80333",
+            mapUrl: "https://www.google.com/maps?q=35.49778,138.80333&z=18",
             hours: "無",
             note: "富士急行線車站，可作為前往新倉山淺間公園或富士吉田周邊的移動點。",
             stay: "車站",
@@ -1168,7 +1169,14 @@
     let touchDragActive = false;
 
     function mapsSearchUrl(address) {
+      if (/^-?\d+(\.\d+)?,-?\d+(\.\d+)?$/.test(address.trim())) {
+        return "https://www.google.com/maps?q=" + encodeURIComponent(address.trim()) + "&z=17";
+      }
       return "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(address);
+    }
+
+    function stopMapUrl(stop) {
+      return stop.mapUrl || mapsSearchUrl(stop.mapQuery);
     }
 
     function fullRouteUrl(stops) {
@@ -1483,7 +1491,7 @@
             <p class="hours"><b>營業時間：</b>${escapeHtml(stop.hours || "無")}</p>
             <p class="note">${stop.note}</p>
           <div class="stop-actions">
-            <a class="small-button" href="${mapsSearchUrl(stop.mapQuery)}" target="_blank" rel="noreferrer">Google Maps</a>
+            <a class="small-button" href="${stopMapUrl(stop)}" target="_blank" rel="noreferrer">Google Maps</a>
             <button class="small-button" type="button" data-memo-button="${index}">備註</button>
             </div>
           </div>
