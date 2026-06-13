@@ -683,8 +683,8 @@
       }
 
       .stop-card {
-        grid-template-columns: minmax(88px, 32%) minmax(0, 1fr);
-        gap: 10px;
+        grid-template-columns: 1fr;
+        gap: 8px;
         padding: 12px 44px 12px 12px;
       }
 
@@ -745,11 +745,11 @@
 
       .time {
         display: flex;
-        width: 100%;
-        min-height: 100%;
-        padding: 7px;
+        width: min(170px, calc(100% - 42px));
+        min-height: 34px;
+        padding: 5px 8px;
         border-radius: 8px;
-        align-items: flex-start;
+        align-items: center;
         justify-content: flex-start;
       }
 
