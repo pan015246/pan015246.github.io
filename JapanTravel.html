@@ -1040,8 +1040,8 @@
             time: "未定",
             title: "下吉田站",
             tag: "車站 · 富士吉田",
-            address: "山梨県富士吉田市新町2丁目8",
-            mapQuery: "下吉田駅 山梨県富士吉田市新町2丁目8",
+            address: "日本〒403-0011 Yamanashi, Fujiyoshida, Arakura, ８４０",
+            mapQuery: "下吉田駅 日本〒403-0011 Yamanashi, Fujiyoshida, Arakura, ８４０",
             hours: "無",
             note: "富士急行線車站，可作為前往新倉山淺間公園或富士吉田周邊的移動點。",
             stay: "車站",
@@ -1569,15 +1569,10 @@
       try {
         const parsedStops = JSON.parse(savedStops);
         const defaults = defaultStopsByTitle();
-        const savedTitles = new Set();
-        dates.forEach((date) => {
-          if (Array.isArray(parsedStops[date])) {
-            parsedStops[date].forEach((stop) => savedTitles.add(stop.title));
-          }
-        });
 
         dates.forEach((date) => {
           if (Array.isArray(parsedStops[date])) {
+            const savedTitlesForDate = new Set(parsedStops[date].map((stop) => stop.title));
             const currentDefaultStops = itineraries[date].stops;
             const mergedStops = [];
             const mergedKeys = new Set();
@@ -1590,7 +1585,7 @@
             });
             currentDefaultStops.forEach((defaultStop) => {
               const key = defaultStop.mapQuery || defaultStop.title;
-              if (!savedTitles.has(defaultStop.title) && !mergedKeys.has(key)) {
+              if (!savedTitlesForDate.has(defaultStop.title) && !mergedKeys.has(key)) {
                 mergedKeys.add(key);
                 mergedStops.push(defaultStop);
               }
