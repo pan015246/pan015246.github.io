@@ -517,9 +517,9 @@
     }
 
     .route-panel-toggle {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) auto;
+      display: flex;
       align-items: center;
+      justify-content: space-between;
       gap: 8px;
       width: 100%;
       padding: 0;
@@ -533,13 +533,16 @@
 
     .route-panel-toggle::after {
       content: "+";
-      display: grid;
-      place-items: center;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex: 0 0 30px;
       width: 24px;
       height: 24px;
       border-radius: 999px;
       background: rgba(22, 124, 128, 0.1);
       color: var(--teal);
+      line-height: 1;
       font-weight: 900;
     }
 
@@ -1234,6 +1237,18 @@
             note: "富士急行線車站，可作為前往新倉山淺間公園或富士吉田周邊的移動點。",
             stay: "車站",
           },
+          {
+            time: "未定",
+            title: "Tokyonest",
+            tag: "住宿 · 東京",
+            address: "〒116-0014 東京都荒川区東日暮里六丁目 あやめ通り",
+            mapQuery: "Tokyonest",
+            mapUrl: "https://www.google.com/maps/place/Tokyonest/@35.7296144,139.7739653,16z/data=!4m9!3m8!1s0x60188f66026d85a1:0xf105b736445dec36!5m2!4m1!1i2!8m2!3d35.7294141!4d139.7734074!16s%2Fg%2F11sr702bkv?authuser=0&entry=ttu&g_ep=EgoyMDI2MDYxNi4wIKXMDSoASAFQAw%3D%3D",
+            routeQuery: "Tokyonest",
+            hours: "無",
+            note: "9/17 住宿地點，出發前可確認入住時間與交通。",
+            stay: "住宿",
+          },
         ],
       },
       "9/18": {
@@ -1298,14 +1313,27 @@
           },
           {
             time: "18:00",
-            title: "原宿居酒屋",
-            tag: "晚餐 · 居酒屋 · 原宿",
-            address: "東京都渋谷区神宮前 周辺",
-            mapQuery: "原宿 居酒屋 東京都渋谷区神宮前",
-            routeQuery: "原宿 居酒屋",
+            title: "爐端燒 萬年青",
+            tag: "晚餐 · 爐端燒 · 神樂坂",
+            address: "〒162-0825 東京都新宿区神楽坂三丁目 見番横丁",
+            mapQuery: "炉端燒 萬年青",
+            mapUrl: "https://www.google.com/maps/place/%E7%88%90%E7%AB%AF%E7%87%92+%E8%90%AC%E5%B9%B4%E9%9D%92/@35.7004014,139.7377694,17z/data=!3m1!4b1!4m6!3m5!1s0x60188c5b140fb5c3:0x2f593b3e5f06600!8m2!3d35.7004014!4d139.7403497!16s%2Fg%2F11bbx4z1t9?authuser=0&entry=ttu&g_ep=EgoyMDI2MDYxNi4wIKXMDSoASAFQAw%3D%3D",
+            routeQuery: "爐端燒 萬年青",
             hours: "店鋪依現場為準",
-            note: "晚餐可先以原宿周邊居酒屋為候選，出發前再依訂位與營業時間確認店家。",
+            note: "神樂坂一帶的爐端燒晚餐，出發前建議再次確認訂位與營業時間。",
             stay: "約 90 分鐘",
+          },
+          {
+            time: "未定",
+            title: "Tokyonest",
+            tag: "住宿 · 東京",
+            address: "〒116-0014 東京都荒川区東日暮里六丁目 あやめ通り",
+            mapQuery: "Tokyonest",
+            mapUrl: "https://www.google.com/maps/place/Tokyonest/@35.7296144,139.7739653,16z/data=!4m9!3m8!1s0x60188f66026d85a1:0xf105b736445dec36!5m2!4m1!1i2!8m2!3d35.7294141!4d139.7734074!16s%2Fg%2F11sr702bkv?authuser=0&entry=ttu&g_ep=EgoyMDI2MDYxNi4wIKXMDSoASAFQAw%3D%3D",
+            routeQuery: "Tokyonest",
+            hours: "無",
+            note: "9/18 住宿地點，出發前可確認入住時間與交通。",
+            stay: "住宿",
           },
         ],
       },
@@ -1755,6 +1783,7 @@
     function syncStopWithDefault(stop, defaults) {
       const titleAliases = {
         "成田國際機場": "成田國際機場第二航廈",
+        "原宿居酒屋": "爐端燒 萬年青",
       };
       const defaultStop = defaults.byTitle.get(stop.title)
         || defaults.byTitle.get(titleAliases[stop.title])
