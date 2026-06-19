@@ -448,29 +448,83 @@
       min-height: 0;
       overflow: auto;
       display: grid;
-      gap: 10px;
+      gap: 0;
       padding: 2px;
     }
 
     .route-modal-step {
+      position: relative;
       display: grid;
-      grid-template-columns: 34px minmax(0, 1fr);
+      grid-template-columns: 44px 76px minmax(0, 1fr);
       gap: 10px;
-      padding: 12px;
-      border: 1px solid rgba(32, 36, 42, 0.1);
-      border-radius: 8px;
-      background: #fbfbfa;
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(32, 36, 42, 0.08);
     }
 
-    .route-modal-step b {
-      display: block;
-      margin-bottom: 4px;
+    .route-modal-step::before {
+      content: "";
+      position: absolute;
+      left: 16px;
+      top: 34px;
+      bottom: -16px;
+      width: 2px;
+      background: rgba(22, 124, 128, 0.18);
+    }
+
+    .route-modal-step:last-child {
+      border-bottom: 0;
+    }
+
+    .route-modal-step:last-child::before {
+      content: none;
+    }
+
+    .route-modal-index {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      place-items: center;
+      width: 34px;
+      height: 34px;
+      border-radius: 999px;
+      background: var(--teal);
+      color: white;
+      font-size: 0.82rem;
+      font-weight: 900;
+    }
+
+    .route-modal-time {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 68px;
+      min-height: 32px;
+      border-radius: 8px;
+      background: #f0f7f7;
+      color: var(--teal);
+      font-weight: 900;
+    }
+
+    .route-modal-title {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 6px;
+      margin: 0 0 5px;
+      font-weight: 900;
     }
 
     .route-modal-step p {
       margin: 0;
       color: var(--muted);
       line-height: 1.55;
+    }
+
+    .route-modal-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      margin: 0 0 7px;
     }
 
     .memo-textarea {
@@ -2037,9 +2091,11 @@
         const item = document.createElement("div");
         item.className = "route-modal-step";
         item.innerHTML = `
-          <span class="pin">${index === 0 ? "起" : index}</span>
+          <span class="route-modal-index">${index === 0 ? "起" : index}</span>
+          <span class="route-modal-time">${escapeHtml(stop.time || "未定")}</span>
           <span>
-            <b>${escapeHtml(stop.title)}</b>
+            <span class="route-modal-title">${escapeHtml(stop.title)}</span>
+            <span class="route-modal-tags">${renderStopBadges(stop)}</span>
             <p>${escapeHtml(stop.address)}</p>
           </span>
         `;
