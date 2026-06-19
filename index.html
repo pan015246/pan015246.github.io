@@ -406,6 +406,56 @@
       font-size: 1.15rem;
     }
 
+    .route-dialog {
+      width: min(980px, 100%);
+      height: min(720px, calc(100vh - 40px));
+      padding: 14px;
+      display: grid;
+      grid-template-rows: auto minmax(0, 1fr);
+    }
+
+    .route-dialog-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin: 0 0 10px;
+    }
+
+    .route-dialog-header h2 {
+      margin: 0;
+      font-size: 1.15rem;
+    }
+
+    .route-modal-list {
+      min-height: 0;
+      overflow: auto;
+      display: grid;
+      gap: 10px;
+      padding: 2px;
+    }
+
+    .route-modal-step {
+      display: grid;
+      grid-template-columns: 34px minmax(0, 1fr);
+      gap: 10px;
+      padding: 12px;
+      border: 1px solid rgba(32, 36, 42, 0.1);
+      border-radius: 8px;
+      background: #fbfbfa;
+    }
+
+    .route-modal-step b {
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .route-modal-step p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
     .memo-textarea {
       width: 100%;
       min-height: 150px;
@@ -831,7 +881,8 @@
 
   <main>
     <nav class="top-actions" aria-label="主要操作">
-      <a class="button primary" id="fullRoute" target="_blank" rel="noreferrer">顯示完整路線</a>
+      <button class="button primary" type="button" id="routePreviewBtn">完整路線</button>
+      <a class="button" id="fullRoute" target="_blank" rel="noreferrer">完整google map</a>
     </nav>
 
     <nav class="date-tabs" id="dateTabs" aria-label="選擇日期"></nav>
@@ -870,6 +921,16 @@
         <button class="small-button" type="button" id="memoCancel">取消</button>
         <button class="small-button" type="button" id="memoSave">儲存</button>
       </div>
+    </div>
+  </div>
+
+  <div class="memo-modal" id="routeModal" role="dialog" aria-modal="true" aria-labelledby="routeModalTitle">
+    <div class="memo-dialog route-dialog">
+      <div class="route-dialog-header">
+        <h2 id="routeModalTitle">完整路線</h2>
+        <button class="small-button" type="button" id="routeModalClose">關閉</button>
+      </div>
+      <div class="route-modal-list" id="routeModalList"></div>
     </div>
   </div>
 
@@ -1190,9 +1251,17 @@
       return stop.routeQuery || stop.mapQuery || stop.title;
     }
 
+    function navigableRouteStops(stops) {
+      return stops.filter((stop, index) => {
+        const nextStop = stops[index + 1];
+        return !(nextStop && isAirport(stop) && isAirport(nextStop));
+      });
+    }
+
     function fullRouteUrl(stops) {
-      if (stops.length < 2) return "";
-      const routePath = stops
+      const routeStops = navigableRouteStops(stops);
+      if (routeStops.length < 2) return "";
+      const routePath = routeStops
         .map((stop) => encodeURIComponent(routeQuery(stop)))
         .join("/");
       return "https://www.google.com/maps/dir/" + routePath + "/?hl=ja&region=jp";
@@ -1241,6 +1310,10 @@
     const lodgingList = document.getElementById("lodgingList");
     const reminderList = document.getElementById("reminderList");
     const fullRoute = document.getElementById("fullRoute");
+    const routePreviewBtn = document.getElementById("routePreviewBtn");
+    const routeModal = document.getElementById("routeModal");
+    const routeModalClose = document.getElementById("routeModalClose");
+    const routeModalList = document.getElementById("routeModalList");
     const memoModal = document.getElementById("memoModal");
     const memoTextarea = document.getElementById("memoTextarea");
     const memoSave = document.getElementById("memoSave");
@@ -1688,13 +1761,16 @@
     }
 
     function renderActions(stops) {
-      const hasRoute = stops.length > 1;
+      const hasRoute = navigableRouteStops(stops).length > 1;
 
       fullRoute.href = hasRoute ? fullRouteUrl(stops) : "#";
-      fullRoute.textContent = hasRoute ? "顯示完整路線" : "顯示完整路線";
+      fullRoute.textContent = hasRoute ? "完整google map" : "完整google map";
       fullRoute.setAttribute("aria-disabled", hasRoute ? "false" : "true");
       fullRoute.style.pointerEvents = hasRoute ? "" : "none";
       fullRoute.style.opacity = hasRoute ? "1" : "0.48";
+
+      routePreviewBtn.disabled = !hasRoute;
+      routePreviewBtn.style.opacity = hasRoute ? "1" : "0.48";
     }
 
     function renderPage() {
@@ -1929,6 +2005,47 @@
 
     memoModal.addEventListener("click", (event) => {
       if (event.target === memoModal) closeMemoModal();
+    });
+
+    function closeRouteModal() {
+      routeModal.classList.remove("open");
+      routeModalList.innerHTML = "";
+    }
+
+    function renderRouteModal(stops) {
+      const routeStops = navigableRouteStops(stops);
+      routeModalList.innerHTML = "";
+
+      routeStops.forEach((stop, index) => {
+        const item = document.createElement("div");
+        item.className = "route-modal-step";
+        item.innerHTML = `
+          <span class="pin">${index === 0 ? "起" : index}</span>
+          <span>
+            <b>${escapeHtml(stop.title)}</b>
+            <p>${escapeHtml(stop.address)}</p>
+            ${index < routeStops.length - 1 ? `
+              <div class="route-actions">
+                <a class="route-link" href="${segmentTransitUrl(stop, routeStops[index + 1])}" target="_blank" rel="noreferrer">下一站</a>
+              </div>
+            ` : ""}
+          </span>
+        `;
+        routeModalList.appendChild(item);
+      });
+    }
+
+    routePreviewBtn.addEventListener("click", () => {
+      const stops = itineraries[selectedDate].stops;
+      if (navigableRouteStops(stops).length < 2) return;
+      renderRouteModal(stops);
+      routeModal.classList.add("open");
+    });
+
+    routeModalClose.addEventListener("click", closeRouteModal);
+
+    routeModal.addEventListener("click", (event) => {
+      if (event.target === routeModal) closeRouteModal();
     });
 
     window.addEventListener("storage", (event) => {
