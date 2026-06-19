@@ -150,6 +150,23 @@
       border-color: var(--accent);
     }
 
+    .route-preview-button {
+      background: var(--accent);
+      color: white;
+      border-color: var(--accent);
+      font-weight: 900;
+      letter-spacing: 0;
+      box-shadow: 0 10px 24px rgba(204, 63, 85, 0.18);
+    }
+
+    .map-route-button {
+      background: rgba(22, 124, 128, 0.1);
+      color: var(--teal);
+      border-color: rgba(22, 124, 128, 0.24);
+      font-weight: 900;
+      letter-spacing: 0;
+    }
+
     .button:hover {
       transform: translateY(-1px);
       box-shadow: 0 10px 24px rgba(31, 36, 43, 0.12);
@@ -881,8 +898,8 @@
 
   <main>
     <nav class="top-actions" aria-label="主要操作">
-      <button class="button primary" type="button" id="routePreviewBtn">完整路線</button>
-      <a class="button" id="fullRoute" target="_blank" rel="noreferrer">完整google map</a>
+      <button class="button primary route-preview-button" type="button" id="routePreviewBtn">完整路線</button>
+      <a class="button map-route-button" id="fullRoute" target="_blank" rel="noreferrer">完整google map</a>
     </nav>
 
     <nav class="date-tabs" id="dateTabs" aria-label="選擇日期"></nav>
@@ -2024,11 +2041,6 @@
           <span>
             <b>${escapeHtml(stop.title)}</b>
             <p>${escapeHtml(stop.address)}</p>
-            ${index < routeStops.length - 1 ? `
-              <div class="route-actions">
-                <a class="route-link" href="${segmentTransitUrl(stop, routeStops[index + 1])}" target="_blank" rel="noreferrer">下一站</a>
-              </div>
-            ` : ""}
           </span>
         `;
         routeModalList.appendChild(item);
