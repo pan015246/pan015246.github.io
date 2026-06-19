@@ -831,7 +831,7 @@
 
   <main>
     <nav class="top-actions" aria-label="主要操作">
-      <a class="button primary" id="fullRoute" target="_blank" rel="noreferrer">開啟 Google Maps 完整路線</a>
+      <a class="button primary" id="fullRoute" target="_blank" rel="noreferrer">顯示完整路線</a>
     </nav>
 
     <nav class="date-tabs" id="dateTabs" aria-label="選擇日期"></nav>
@@ -1031,7 +1031,8 @@
             title: "東京車站",
             tag: "車站 · 東京",
             address: "東京都千代田区丸の内1丁目",
-            mapQuery: "東京駅 東京都千代田区丸の内1丁目",
+            mapQuery: "東京駅",
+            mapUrl: "https://www.google.com/maps/search/?api=1&hl=ja&region=jp&query=%E6%9D%B1%E4%BA%AC%E9%A7%85",
             hours: "無",
             note: "東京主要轉乘車站，可安排搭車或站內採買。",
             stay: "車站",
@@ -1040,9 +1041,9 @@
             time: "未定",
             title: "下吉田站",
             tag: "車站 · 富士吉田",
-            address: "日本〒403-0011 Yamanashi, Fujiyoshida, Arakura, ８４０",
-            mapQuery: "35.49778,138.80333",
-            mapUrl: "https://www.google.com/maps?q=35.49778,138.80333&z=18",
+            address: "840 Arakura, Fujiyoshida, Yamanashi 403-0011 Japan",
+            mapQuery: "下吉田駅",
+            mapUrl: "https://www.google.com/maps/search/?api=1&hl=ja&region=jp&query=%E4%B8%8B%E5%90%89%E7%94%B0%E9%A7%85",
             hours: "無",
             note: "富士急行線車站，可作為前往新倉山淺間公園或富士吉田周邊的移動點。",
             stay: "車站",
@@ -1060,6 +1061,7 @@
             tag: "寺院 · 世田谷",
             address: "〒154-0021 東京都世田谷区豪徳寺2丁目24−7",
             mapQuery: "大谿山 豪徳寺 東京都世田谷区豪徳寺2-24-7",
+            routeQuery: "豪徳寺 東京都世田谷区",
             hours: "06:00-17:00",
             note: "以招福貓聞名的世田谷寺院，適合作為早上第一站。",
             stay: "約 60 分鐘",
@@ -1069,7 +1071,8 @@
             title: "原宿駅",
             tag: "山手線",
             address: "〒150-0001 東京都渋谷区神宮前1丁目 原宿駅",
-            mapQuery: "JR 原宿駅 山手線 東京都渋谷区神宮前1丁目",
+            mapQuery: "原宿駅",
+            mapUrl: "https://www.google.com/maps/search/?api=1&hl=ja&region=jp&query=%E5%8E%9F%E5%AE%BF%E9%A7%85",
             hours: "無",
             note: "從車站出來後，往神宮前與東急プラザ方向移動。",
             stay: "車站",
@@ -1080,6 +1083,7 @@
             tag: "太陽眼鏡",
             address: "〒150-0001 東京都渋谷区神宮前1丁目11−6 ラフォーレ原宿 1.5F",
             mapQuery: "eyecon ラフォーレ原宿 1.5F",
+            routeQuery: "eyecon 原宿店",
             hours: "11:00-20:00",
             note: "先逛眼鏡與配件，位置在ラフォーレ原宿，適合作為第一站。",
             stay: "約 30 分鐘",
@@ -1090,6 +1094,7 @@
             tag: "美妝",
             address: "1 Chome-14-27 Jingumae, Shibuya, Tokyo 150-0001 日本",
             mapQuery: "@cosme TOKYO 東京都渋谷区神宮前1丁目14-27",
+            routeQuery: "@cosme TOKYO",
             hours: "11:00-21:00",
             note: "大型美妝店，建議把想買品牌先列好，現場會省很多時間。",
             stay: "約 30 分鐘",
@@ -1100,6 +1105,7 @@
             tag: "玩具店",
             address: "6 Chome-1-9 Jingumae, Shibuya, Tokyo 150-0001 日本",
             mapQuery: "キデイランド原宿店 6-1-9 Jingumae Shibuya",
+            routeQuery: "キデイランド原宿店",
             hours: "平日 11:00-21:00／土日祝 10:30-21:00",
             note: "角色商品與伴手禮選擇多，適合放在最後慢慢挑。",
             stay: "約 30 分鐘",
@@ -1110,6 +1116,7 @@
             tag: "晚餐 · 居酒屋 · 原宿",
             address: "東京都渋谷区神宮前 周辺",
             mapQuery: "原宿 居酒屋 東京都渋谷区神宮前",
+            routeQuery: "原宿 居酒屋",
             hours: "店鋪依現場為準",
             note: "晚餐可先以原宿周邊居酒屋為候選，出發前再依訂位與營業時間確認店家。",
             stay: "約 90 分鐘",
@@ -1170,30 +1177,32 @@
 
     function mapsSearchUrl(address) {
       if (/^-?\d+(\.\d+)?,-?\d+(\.\d+)?$/.test(address.trim())) {
-        return "https://www.google.com/maps?q=" + encodeURIComponent(address.trim()) + "&z=17";
+        return "https://www.google.com/maps?q=" + encodeURIComponent(address.trim()) + "&z=17&hl=ja&region=jp";
       }
-      return "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(address);
+      return "https://www.google.com/maps/search/?api=1&hl=ja&region=jp&query=" + encodeURIComponent(address);
     }
 
     function stopMapUrl(stop) {
       return stop.mapUrl || mapsSearchUrl(stop.mapQuery);
     }
 
+    function routeQuery(stop) {
+      return stop.routeQuery || stop.mapQuery || stop.title;
+    }
+
     function fullRouteUrl(stops) {
       if (stops.length < 2) return "";
-      const waypoints = stops.slice(1, -1).map((stop) => stop.mapQuery).join("|");
-      let url = "https://www.google.com/maps/dir/?api=1"
-        + "&origin=" + encodeURIComponent(stops[0].mapQuery)
-        + "&destination=" + encodeURIComponent(stops[stops.length - 1].mapQuery)
-        + "&travelmode=transit";
-      if (waypoints) url += "&waypoints=" + encodeURIComponent(waypoints);
-      return url;
+      const routePath = stops
+        .map((stop) => encodeURIComponent(routeQuery(stop)))
+        .join("/");
+      return "https://www.google.com/maps/dir/" + routePath + "/?hl=ja&region=jp";
     }
 
     function segmentTransitUrl(from, to) {
       return "https://www.google.com/maps/dir/?api=1"
-        + "&origin=" + encodeURIComponent(from.mapQuery)
-        + "&destination=" + encodeURIComponent(to.mapQuery)
+        + "&hl=ja&region=jp"
+        + "&origin=" + encodeURIComponent(routeQuery(from))
+        + "&destination=" + encodeURIComponent(routeQuery(to))
         + "&travelmode=transit"
         + "&dir_action=navigate";
     }
@@ -1682,7 +1691,7 @@
       const hasRoute = stops.length > 1;
 
       fullRoute.href = hasRoute ? fullRouteUrl(stops) : "#";
-      fullRoute.textContent = hasRoute ? "完整路線參考" : "完整路線參考";
+      fullRoute.textContent = hasRoute ? "顯示完整路線" : "顯示完整路線";
       fullRoute.setAttribute("aria-disabled", hasRoute ? "false" : "true");
       fullRoute.style.pointerEvents = hasRoute ? "" : "none";
       fullRoute.style.opacity = hasRoute ? "1" : "0.48";
