@@ -154,6 +154,7 @@
       background: var(--accent);
       color: white;
       border-color: var(--accent);
+      font-size: 0.98rem;
       font-weight: 900;
       letter-spacing: 0;
       box-shadow: 0 10px 24px rgba(204, 63, 85, 0.18);
@@ -163,6 +164,7 @@
       background: rgba(22, 124, 128, 0.1);
       color: var(--teal);
       border-color: rgba(22, 124, 128, 0.24);
+      font-size: 0.98rem;
       font-weight: 900;
       letter-spacing: 0;
     }
@@ -938,6 +940,13 @@
       .date-tabs {
         gap: 8px 12px;
       }
+
+      .route-dialog-header .small-button {
+        width: auto;
+        min-height: 30px;
+        padding: 5px 8px;
+        font-size: 0.82rem;
+      }
     }
   </style>
 </head>
@@ -953,7 +962,7 @@
   <main>
     <nav class="top-actions" aria-label="主要操作">
       <button class="button primary route-preview-button" type="button" id="routePreviewBtn">完整路線</button>
-      <a class="button map-route-button" id="fullRoute" target="_blank" rel="noreferrer">完整google map</a>
+      <a class="button map-route-button" id="fullRoute" target="_blank" rel="noreferrer">完整Maps</a>
     </nav>
 
     <nav class="date-tabs" id="dateTabs" aria-label="選擇日期"></nav>
@@ -1835,7 +1844,7 @@
       const hasRoute = navigableRouteStops(stops).length > 1;
 
       fullRoute.href = hasRoute ? fullRouteUrl(stops) : "#";
-      fullRoute.textContent = hasRoute ? "完整google map" : "完整google map";
+      fullRoute.textContent = hasRoute ? "完整Maps" : "完整Maps";
       fullRoute.setAttribute("aria-disabled", hasRoute ? "false" : "true");
       fullRoute.style.pointerEvents = hasRoute ? "" : "none";
       fullRoute.style.opacity = hasRoute ? "1" : "0.48";
