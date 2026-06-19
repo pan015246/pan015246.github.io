@@ -516,6 +516,37 @@
       font-weight: 900;
     }
 
+    .route-panel-toggle {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 8px;
+      width: 100%;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      color: var(--ink);
+      font: inherit;
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .route-panel-toggle::after {
+      content: "+";
+      display: grid;
+      place-items: center;
+      width: 24px;
+      height: 24px;
+      border-radius: 999px;
+      background: rgba(22, 124, 128, 0.1);
+      color: var(--teal);
+      font-weight: 900;
+    }
+
+    .route-panel.open .route-panel-toggle::after {
+      content: "-";
+    }
+
     .route-modal-step p {
       margin: 0;
       color: var(--muted);
@@ -527,6 +558,14 @@
       flex-wrap: wrap;
       gap: 5px;
       margin: 0 0 7px;
+    }
+
+    .route-panel-body {
+      display: none;
+    }
+
+    .route-panel.open .route-panel-body {
+      display: block;
     }
 
     .memo-textarea {
@@ -943,9 +982,9 @@
 
       .route-dialog-header .small-button {
         width: auto;
-        min-height: 30px;
-        padding: 5px 8px;
-        font-size: 0.82rem;
+        min-height: 34px;
+        padding: 6px 10px;
+        font-size: 0.9rem;
       }
     }
   </style>
@@ -975,8 +1014,14 @@
 
       <aside aria-label="路線與地圖">
         <section class="info-panel route-panel">
-          <h2 class="panel-title-route" id="routeTitle">步行路線</h2>
-          <ol class="route-list" id="routeList"></ol>
+          <h2 class="panel-title-route">
+            <button class="route-panel-toggle" type="button" id="routePanelToggle" aria-expanded="false">
+              <span id="routeTitle">步行路線</span>
+            </button>
+          </h2>
+          <div class="route-panel-body" id="routePanelBody">
+            <ol class="route-list" id="routeList"></ol>
+          </div>
         </section>
 
         <section class="info-panel lodging-panel">
@@ -1387,6 +1432,8 @@
     const timeline = document.getElementById("timeline");
     const dateTabs = document.getElementById("dateTabs");
     const routeList = document.getElementById("routeList");
+    const routePanelToggle = document.getElementById("routePanelToggle");
+    const routePanelBody = document.getElementById("routePanelBody");
     const lodgingList = document.getElementById("lodgingList");
     const reminderList = document.getElementById("reminderList");
     const fullRoute = document.getElementById("fullRoute");
@@ -2111,6 +2158,12 @@
         routeModalList.appendChild(item);
       });
     }
+
+    routePanelToggle.addEventListener("click", () => {
+      const panel = routePanelToggle.closest(".route-panel");
+      const isOpen = panel.classList.toggle("open");
+      routePanelToggle.setAttribute("aria-expanded", isOpen ? "true" : "false");
+    });
 
     routePreviewBtn.addEventListener("click", () => {
       const stops = itineraries[selectedDate].stops;
