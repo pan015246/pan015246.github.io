@@ -1269,7 +1269,7 @@
             stay: "住宿",
           },
           {
-            time: "未定",
+            time: "21:00",
             title: "らーめん 鴨to葱 上野御徒町本店",
             subtitle: "Ramen Kamo to Negi Ueno Okachimachi Main Store",
             tag: "拉麵 · 上野御徒町",
@@ -1871,9 +1871,12 @@
         || defaults.byMapQuery.get(stop.mapQuery);
       if (!defaultStop) return stop;
 
+      const shouldUpdateRamenTime = defaultStop.title === "らーめん 鴨to葱 上野御徒町本店"
+        && stop.time === "未定";
+
       return {
         ...defaultStop,
-        time: stop.time || defaultStop.time,
+        time: shouldUpdateRamenTime ? defaultStop.time : (stop.time || defaultStop.time),
         memo: stop.memo || "",
       };
     }
